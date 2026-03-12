@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña</title>
+    <link rel="stylesheet" href="../css/estilos.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Recuperar Contraseña</h2>
+        <p>Ingresa tu correo electrónico para enviarte un enlace de recuperación.</p>
+
+        <form onsubmit="enviarRecuperacion(); return false;">
+            <input type="email" id="email" placeholder="Correo electrónico" required>
+
+            <button type="submit" class="btn-login">Enviar</button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="login.html">Volver al inicio de sesión</a>
+        </div>
+    </div>
+
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="../js/recuperar.js"></script>
+
+</body>
+</html>

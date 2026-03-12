@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ecommerce - Productos</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <img src="img/logo.png" alt="Logo de Ecommerce">
+      <h1>Ecommerce</h1>
+    </div>
+    <nav>
+      <a href="productos.html" class="activo">Productos</a>
+      <a href="carrito.html">Carrito (<span id="contador-carrito">0</span>)</a>
+      <a href="contacto.html">Contacto</a>
+      <button onclick="cerrarSesion()">Cerrar Sesión</button>
+    </nav>
+  </header>
+
+  <main class="productos">
+    <h2>Catálogo de Productos</h2>
+
+    <!-- CATEGORÍA: ROPA -->
+    <section class="categoria">
+      <h3>Ropa</h3>
+      <div class="grid-productos">
+        <div class="producto">
+          <img src="https://media.istockphoto.com/id/488160041/photo/mens-shirt.jpg?s=2048x2048&w=is&k=20&c=YPbIbqxG92awyPuMre-871UtKmii43b8DFhsAysx5k4=" alt="Camisa Azul">
+          <h3>Camisa Azul</h3>
+          <p>$60.000</p>
+          <button onclick="agregarAlCarrito('Camisa Azul', 60000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://media.istockphoto.com/id/173239968/photo/skinny-tight-blue-jeans-on-white-background.jpg?s=2048x2048&w=is&k=20&c=p1taiRab1WZm98e03PrzFWHEkDl7_packPvFQBQAVWc=" alt="Jean Clásico">
+          <h3>Jean Clásico</h3>
+          <p>$80.000</p>
+          <button onclick="agregarAlCarrito('Jean Clásico', 80000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://media.istockphoto.com/id/695933044/photo/black-hoodie-mock-up.jpg?s=2048x2048&w=is&k=20&c=ydeyqEpyRF8xiy2m7Tl_Si6d4V3bgsKwBjJGKMtbmnY=" alt="Chaqueta Negra">
+          <h3>Chaqueta Negra</h3>
+          <p>$150.000</p>
+          <button onclick="agregarAlCarrito('Chaqueta Negra', 150000)">Agregar al carrito</button>
+        </div>
+
+        <!-- Nueva ropa -->
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2021/09/02/13/02/woman-6593404_1280.jpg" alt="Vestido Rojo">
+          <h3>Vestido Rojo</h3>
+          <p>$110.000</p>
+          <button onclick="agregarAlCarrito('Vestido Rojo', 110000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2016/03/25/09/04/t-shirt-1278404_1280.jpg" alt="Camiseta Blanca">
+          <h3>Camiseta Blanca</h3>
+          <p>$45.000</p>
+          <button onclick="agregarAlCarrito('Camiseta Blanca', 45000)">Agregar al carrito</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORÍA: CALZADO -->
+    <section class="categoria">
+      <h3>Calzado</h3>
+      <div class="grid-productos">
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2016/11/19/18/06/feet-1840619_1280.jpg" alt="Zapatos Deportivos">
+          <h3>Zapatos Deportivos</h3>
+          <p>$120.000</p>
+          <button onclick="agregarAlCarrito('Zapatos Deportivos', 120000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2020/05/27/07/41/nike-5226091_1280.jpg" alt="Tenis Blancos">
+          <h3>Tenis Blancos</h3>
+          <p>$125.000</p>
+          <button onclick="agregarAlCarrito('Tenis Blancos', 125000)">Agregar al carrito</button>
+        </div>
+
+        <!-- Nuevos calzados -->
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2022/10/08/17/04/shoes-7507418_1280.jpg" alt="Zapatos Formales">
+          <h3>Zapatos Formales</h3>
+          <p>$150.000</p>
+          <button onclick="agregarAlCarrito('Zapatos Formales', 150000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2015/01/10/04/53/flip-flops-594914_1280.jpg" alt="Sandalias Verano">
+          <h3>Sandalias Verano</h3>
+          <p>$65.000</p>
+          <button onclick="agregarAlCarrito('Sandalias Verano', 65000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2019/11/26/20/02/shoes-4655404_1280.jpg" alt="Botas Marrones">
+          <h3>Botas Marrones</h3>
+          <p>$180.000</p>
+          <button onclick="agregarAlCarrito('Botas Marrones', 180000)">Agregar al carrito</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORÍA: ACCESORIOS -->
+    <section class="categoria">
+      <h3>Accesorios</h3>
+      <div class="grid-productos">
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2022/04/01/03/20/timepiece-7103973_1280.jpg" alt="Reloj de Pulsera">
+          <h3>Reloj de Pulsera</h3>
+          <p>$90.000</p>
+          <button onclick="agregarAlCarrito('Reloj de Pulsera', 90000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2017/12/06/20/23/accessory-3002608_1280.jpg" alt="Gafas de Sol">
+          <h3>Gafas de Sol</h3>
+          <p>$45.000</p>
+          <button onclick="agregarAlCarrito('Gafas de Sol', 45000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2015/11/20/03/53/package-1052370_1280.jpg" alt="Bolso de Cuero">
+          <h3>Bolso de Cuero</h3>
+          <p>$130.000</p>
+          <button onclick="agregarAlCarrito('Bolso de Cuero', 130000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2020/07/03/04/47/bluetooth-headset-5365166_1280.jpg" alt="Auriculares Bluetooth">
+          <h3>Auriculares Bluetooth</h3>
+          <p>$110.000</p>
+          <button onclick="agregarAlCarrito('Auriculares Bluetooth', 110000)">Agregar al carrito</button>
+        </div>
+
+        <div class="producto">
+          <img src="https://cdn.pixabay.com/photo/2017/03/14/11/39/perfume-2142817_1280.jpg" alt="Perfume Clásico">
+          <h3>Perfume Clásico</h3>
+          <p>$95.000</p>
+          <button onclick="agregarAlCarrito('Perfume Clásico', 95000)">Agregar al carrito</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
