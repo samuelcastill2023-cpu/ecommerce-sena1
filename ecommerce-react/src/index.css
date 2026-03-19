@@ -1,0 +1,255 @@
+/* ===== COLORES ECOMMERCE ===== */
+:root {
+  --text: #333;
+  --text-h: #1e3a8a;
+  --bg: #f2f6ff;
+  --border: #dbe3f0;
+
+  --accent: #2563eb;
+  --accent-bg: rgba(37, 99, 235, 0.1);
+  --accent-border: rgba(37, 99, 235, 0.5);
+
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: 'Poppins', system-ui, sans-serif;
+  --heading: 'Poppins', system-ui, sans-serif;
+
+  font: 18px/145% var(--sans);
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* ===== GENERAL ===== */
+body {
+  margin: 0;
+}
+
+#root {
+  width: 1200px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== TITULOS ===== */
+h1, h2 {
+  font-family: var(--heading);
+  color: var(--text-h);
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+/* ===== NAVBAR ===== */
+nav {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 20px 10px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+nav h2 {
+  margin: 0;
+  color: white;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0;
+  margin-top: 10px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: #a7c4ff;
+  text-decoration: underline;
+}
+
+/* ===== MAIN ===== */
+main {
+  padding: 40px 20px;
+}
+
+/* ===== CATEGORIAS ===== */
+.categoria {
+  margin-bottom: 50px;
+}
+
+.categoria h3 {
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+/* ===== CARRUSEL ===== */
+.carrusel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* BOTONES DEL CARRUSEL */
+.carrusel button {
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.carrusel button:hover {
+  background-color: #2563eb;
+  transform: scale(1.1);
+}
+
+/* 🔥 CLAVE: CONTENEDOR DE PRODUCTOS */
+.grid-productos {
+  display: flex; /* CAMBIAMOS GRID POR FLEX */
+  flex-direction: row;
+  gap: 20px;
+}
+
+/* ===== TARJETA PRODUCTO ===== */
+.producto {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  padding: 15px;
+  width: 240px;
+  text-align: center;
+  transition: 0.3s;
+
+  flex-shrink: 0; /* 🔥 evita que se bajen */
+}
+
+.producto:hover {
+  transform: translateY(-5px);
+}
+
+.producto img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.producto h3 {
+  font-size: 16px;
+  margin: 10px 0;
+  color: #1e3a8a;
+}
+
+.producto p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* ===== BOTONES ===== */
+.producto button {
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 8px;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.producto button:hover {
+  background-color: #2563eb;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 15px;
+  margin-top: auto;
+}
+/* ===== LOGIN ===== */
+.login-container {
+  width: 350px;
+  margin: 80px auto;
+  padding: 30px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.login-container h2 {
+  color: #1e3a8a;
+  margin-bottom: 20px;
+}
+
+.login-container label {
+  display: block;
+  text-align: left;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.login-container button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1e3a8a;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.login-container button:hover {
+  background-color: #2563eb;
+}
+
+.registro {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.registro a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.forgot {
+  margin-top: 10px;
+}
+
+.forgot a {
+  color: #2563eb;
+  font-size: 14px;
+  text-decoration: none;
+}
