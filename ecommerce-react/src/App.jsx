@@ -1,8 +1,10 @@
 import Navbar from "./components/Navbar";
 import Productos from "./pages/Productos";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Carrito from "./pages/Carrito";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -10,10 +12,11 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<h1>Inicio</h1>} />
+        <Route path="/" element={<Navigate to="/productos" />} />
         <Route path="/productos" element={<Productos />} />
-        <Route path="/carrito" element={<h1>Carrito</h1>} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/carrito" element={<Carrito />} />
       </Routes>
     </>
   );
