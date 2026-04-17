@@ -21,19 +21,39 @@ function Register() {
     });
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!form.nombre || !form.correo || !form.password) {
       alert("Completa los campos obligatorios");
       return;
     }
 
-    // 🔥 Guardar usuario
-    localStorage.setItem("usuario", JSON.stringify(form));
+    try {
+      const res = await fetch("http://localhost:3001/api/registro", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usuario: form.correo,
+          password: form.password,
+        }),
+      });
 
-    alert("Registro exitoso");
+      const data = await res.json();
 
-    // 🔥 Redirigir al login
-    navigate("/login");
+      alert(data.mensaje);
+
+      if (res.ok) {
+        // 🔥 AQUÍ ESTÁ EL CAMBIO
+        localStorage.setItem("nombre", form.nombre);
+
+        navigate("/login");
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor");
+    }
   };
 
   return (

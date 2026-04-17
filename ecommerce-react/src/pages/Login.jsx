@@ -7,34 +7,39 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (correo === "" || password === "") {
       alert("Por favor completa todos los campos");
       return;
     }
 
-    // 🔥 Obtener usuario registrado
-    const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
+    try {
+      const res = await fetch("http://localhost:3001/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usuario: correo,
+          password: password,
+        }),
+      });
 
-    if (!usuarioGuardado) {
-      alert("No hay usuario registrado");
-      return;
-    }
+      const data = await res.json();
 
-    // 🔥 Validar datos
-    if (
-      correo === usuarioGuardado.correo &&
-      password === usuarioGuardado.password
-    ) {
-      // 🔥 Guardar sesión (nombre)
-      localStorage.setItem("sesion", usuarioGuardado.nombre);
+      alert(data.mensaje);
 
-      alert("Bienvenido " + usuarioGuardado.nombre);
+      if (res.ok) {
+        // 🔥 CAMBIO AQUÍ
+        const nombre = localStorage.getItem("nombre");
+        localStorage.setItem("sesion", nombre);
 
-      // 🔥 Redirigir a productos
-     window.location.href = "/productos";
-    } else {
-      alert("Datos incorrectos");
+        window.location.href = "/productos";
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor");
     }
   };
 
@@ -61,12 +66,10 @@ function Login() {
 
         <button onClick={handleLogin}>Ingresar</button>
 
-        {/* 🔥 REGISTRO FUNCIONANDO */}
         <p className="registro">
           ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
         </p>
 
-        {/* 🔥 (Luego lo conectamos bien) */}
         <p className="forgot">
           <a href="#">¿Olvidaste tu contraseña?</a>
         </p>
