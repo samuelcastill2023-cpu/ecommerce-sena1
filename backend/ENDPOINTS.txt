@@ -1,0 +1,7 @@
+API PROYECTO ECOMMERCE
+
+Registro de usuario:
+POST http://localhost:3000/api/users/register
+
+Login de usuario:
+POST http://localhost:3000/api/users/login

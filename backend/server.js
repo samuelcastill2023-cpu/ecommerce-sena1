@@ -4,24 +4,22 @@ const cors = require("cors");
 
 const app = express();
 
-// Middleware
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
 // Conexión a MongoDB
-mongoose.connect("mongodb://samuelcastill2023_db_user:Gb3hSFZnJi3h4E@cluster0.2xmiuio.mongodb.net/?appName=Cluster0")
+mongoose.connect("mongodb://localhost:27017/ecommerce")
   .then(() => console.log("✅ Conectado a MongoDB"))
-  .catch(err => console.log("❌ Error:", err));
+  .catch(err => console.log("❌ Error MongoDB:", err));
 
-// Ruta de prueba
-app.get("/", (req, res) => {
-  res.send("Servidor funcionando 🚀");
-});
+// Rutas
+const userRoutes = require("./routes/userRoutes");
+app.use("/api/users", userRoutes);
 
-// Puerto
+// Servidor
 const PORT = 3000;
 
-// Levantar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });

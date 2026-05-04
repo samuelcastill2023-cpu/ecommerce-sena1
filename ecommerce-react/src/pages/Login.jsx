@@ -14,27 +14,24 @@ function Login() {
     }
 
     try {
-      const res = await fetch("http://localhost:3001/api/login", {
+      const res = await fetch("http://localhost:3000/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          usuario: correo,
+          email: correo,
           password: password,
         }),
       });
 
       const data = await res.json();
 
-      alert(data.mensaje);
+      alert(data.message);
 
       if (res.ok) {
-        // 🔥 CAMBIO AQUÍ
-        const nombre = localStorage.getItem("nombre");
-        localStorage.setItem("sesion", nombre);
-
-        window.location.href = "/productos";
+        localStorage.setItem("sesion", correo);
+        navigate("/productos");
       }
 
     } catch (error) {
@@ -68,10 +65,6 @@ function Login() {
 
         <p className="registro">
           ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
-        </p>
-
-        <p className="forgot">
-          <a href="#">¿Olvidaste tu contraseña?</a>
         </p>
       </div>
     </main>

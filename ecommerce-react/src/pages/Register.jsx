@@ -28,25 +28,28 @@ function Register() {
     }
 
     try {
-      const res = await fetch("http://localhost:3001/api/registro", {
+      const res = await fetch("http://localhost:3000/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          usuario: form.correo,
+          name: form.nombre,
+          email: form.correo,
           password: form.password,
+          phone: form.telefono,
+          address: form.direccion,
+          city: form.ciudad,
+          birthdate: form.fecha
         }),
       });
 
       const data = await res.json();
 
-      alert(data.mensaje);
+      alert(data.message);
 
       if (res.ok) {
-        // 🔥 AQUÍ ESTÁ EL CAMBIO
         localStorage.setItem("nombre", form.nombre);
-
         navigate("/login");
       }
 
