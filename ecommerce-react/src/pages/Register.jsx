@@ -1,0 +1,92 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+function Register() {
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    nombre: "",
+    correo: "",
+    password: "",
+    telefono: "",
+    direccion: "",
+    ciudad: "",
+    fecha: ""
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleRegister = async () => {
+    if (!form.nombre || !form.correo || !form.password) {
+      alert("Completa los campos obligatorios");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.nombre,
+          email: form.correo,
+          password: form.password,
+          phone: form.telefono,
+          address: form.direccion,
+          city: form.ciudad,
+          birthdate: form.fecha
+        }),
+      });
+
+      const data = await res.json();
+
+      alert(data.message);
+
+      if (res.ok) {
+        localStorage.setItem("nombre", form.nombre);
+        navigate("/login");
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor");
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <h2>Registro</h2>
+
+      <label>Nombre completo</label>
+      <input name="nombre" onChange={handleChange} />
+
+      <label>Correo</label>
+      <input type="email" name="correo" onChange={handleChange} />
+
+      <label>Contraseña</label>
+      <input type="password" name="password" onChange={handleChange} />
+
+      <label>Teléfono</label>
+      <input name="telefono" onChange={handleChange} />
+
+      <label>Dirección</label>
+      <input name="direccion" onChange={handleChange} />
+
+      <label>Ciudad</label>
+      <input name="ciudad" onChange={handleChange} />
+
+      <label>Fecha de nacimiento</label>
+      <input type="date" name="fecha" onChange={handleChange} />
+
+      <button onClick={handleRegister}>Registrarse</button>
+    </div>
+  );
+}
+
+export default Register;
