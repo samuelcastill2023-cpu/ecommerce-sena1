@@ -1,3 +1,8 @@
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
+
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -9,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // Conexión a MongoDB
-mongoose.connect("mongodb://localhost:27017/ecommerce")
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Conectado a MongoDB"))
   .catch(err => console.log("❌ Error MongoDB:", err));
 
