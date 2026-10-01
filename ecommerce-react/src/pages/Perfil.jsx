@@ -29,7 +29,7 @@ function Perfil() {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/users/profile/${encodeURIComponent(correoSesion)}`
+        `https://ecommerce-backend-k2b7.onrender.com/api/users/profile/${encodeURIComponent(correoSesion)}`
       );
 
       const data = await res.json();
@@ -95,7 +95,7 @@ function Perfil() {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/users/profile/${encodeURIComponent(correoAnterior)}`,
+        `https://ecommerce-backend-k2b7.onrender.com/api/users/profile/${encodeURIComponent(correoAnterior)}`,
         {
           method: "PUT",
           headers: {
@@ -144,7 +144,7 @@ function Perfil() {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/users/change-password/${encodeURIComponent(correoSesion)}`,
+        `https://ecommerce-backend-k2b7.onrender.com/api/users/change-password/${encodeURIComponent(correoSesion)}`,
         {
           method: "PUT",
           headers: {

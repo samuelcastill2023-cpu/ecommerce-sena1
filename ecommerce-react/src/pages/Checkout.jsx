@@ -37,7 +37,7 @@ function Checkout() {
     const cargarUsuario = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/users/profile/${correo}`
+          `https://ecommerce-backend-k2b7.onrender.com/api/users/profile/${correo}`
         );
 
         const data = await res.json();
@@ -165,7 +165,7 @@ function Checkout() {
     try {
       // 📡 Guardar pedido en MongoDB
       const res = await fetch(
-        "http://localhost:3000/api/orders",
+        "https://ecommerce-backend-k2b7.onrender.com/api/orders",
         {
           method: "POST",
           headers: {

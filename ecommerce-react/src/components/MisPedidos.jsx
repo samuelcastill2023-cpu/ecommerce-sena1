@@ -16,7 +16,7 @@ function MisPedidos() {
 
       try {
         const res = await fetch(
-          `http://localhost:3000/api/orders/usuario/${encodeURIComponent(email)}`
+          `https://ecommerce-backend-k2b7.onrender.com/api/orders/usuario/${encodeURIComponent(email)}`
         );
 
         const data = await res.json();
