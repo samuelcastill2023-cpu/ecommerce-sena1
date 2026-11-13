@@ -50,7 +50,7 @@ router.post("/register", async (req, res) => {
     console.error(error);
 
     res.status(500).json({
-      error: "Error al registrar usuario"
+      message: "Error al registrar usuario"
     });
   }
 });
@@ -84,7 +84,7 @@ router.post("/login", async (req, res) => {
     console.error(error);
 
     res.status(500).json({
-      error: "Error en el login"
+      message: "Error en el login"
     });
   }
 });
@@ -111,7 +111,7 @@ router.get("/profile/:email", async (req, res) => {
     console.error(error);
 
     res.status(500).json({
-      error: "Error al obtener el perfil"
+      message: "Error al obtener el perfil"
     });
   }
 });
@@ -172,7 +172,7 @@ router.put("/profile/:email", async (req, res) => {
     console.error(error);
 
     res.status(500).json({
-      error: "Error al actualizar el perfil"
+      message: "Error al actualizar el perfil"
     });
   }
 });
@@ -230,7 +230,7 @@ router.put("/change-password/:email", async (req, res) => {
     console.error(error);
 
     res.status(500).json({
-      error: "Error al cambiar la contraseña"
+      message: "Error al cambiar la contraseña"
     });
   }
 });
