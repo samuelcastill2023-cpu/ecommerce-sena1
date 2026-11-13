@@ -31,9 +31,32 @@ function Navbar() {
   }, []);
 
   // Sesión
-  const usuario = localStorage.getItem("sesion");
-  const nombreUsuario =
-    localStorage.getItem("nombreUsuario");
+  const [usuario, setUsuario] = useState(
+    localStorage.getItem("sesion")
+  );
+  const [nombreUsuario, setNombreUsuario] = useState(
+    localStorage.getItem("nombreUsuario")
+  );
+
+  // 🔥 Actualizar sesión cuando el usuario inicia sesión
+  useEffect(() => {
+    const actualizarSesion = () => {
+      setUsuario(localStorage.getItem("sesion"));
+      setNombreUsuario(localStorage.getItem("nombreUsuario"));
+    };
+
+    window.addEventListener(
+      "sesionActualizada",
+      actualizarSesion
+    );
+
+    return () => {
+      window.removeEventListener(
+        "sesionActualizada",
+        actualizarSesion
+      );
+    };
+  }, []);
 
   // Cerrar sesión
   const cerrarSesion = () => {

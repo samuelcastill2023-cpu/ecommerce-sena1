@@ -33,6 +33,9 @@ function Login() {
   localStorage.setItem("sesion", data.user.email);
   localStorage.setItem("nombreUsuario", data.user.name);
 
+  // 🔥 Avisar al Navbar que hay sesión
+  window.dispatchEvent(new Event("sesionActualizada"));
+
   navigate("/productos");
 }
 
