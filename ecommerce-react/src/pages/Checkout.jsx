@@ -37,7 +37,7 @@ function Checkout() {
     const cargarUsuario = async () => {
       try {
         const res = await fetch(
-          `https://ecommerce-backend-k2b7.onrender.com/api/users/profile/${correo}`
+          `https://ecommerce-backend-k2b7.onrender.com/api/users/profile/${encodeURIComponent(correo)}`
         );
 
         const data = await res.json();
@@ -136,8 +136,7 @@ function Checkout() {
     }
 
     // 🔢 Crear número de pedido
-    const numeroPedido =
-      "EC-" + Math.floor(10000 + Math.random() * 90000);
+    const numeroPedido = "EC-" + Date.now();
 
     // 📦 Crear pedido
     const pedido = {
