@@ -60,6 +60,21 @@ function Carrito() {
 
             <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
               <button
+  onClick={vaciarCarrito}
+  style={{
+    backgroundColor: "#dc3545",
+    color: "white",
+    border: "none",
+    padding: "10px",
+    borderRadius: "5px",
+    cursor: "pointer",
+    flex: 1
+  }}
+>
+  Vaciar carrito 🗑️
+</button>
+
+              <button
   onClick={() => navigate("/checkout")}
   style={{
     backgroundColor: "#28a745",
