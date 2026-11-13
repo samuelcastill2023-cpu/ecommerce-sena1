@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_URL } from "../config";
 
 function Perfil() {
   const [usuario, setUsuario] = useState(null);
@@ -29,7 +30,7 @@ function Perfil() {
 
     try {
       const res = await fetch(
-        `https://ecommerce-backend-k2b7.onrender.com/api/users/profile/${encodeURIComponent(correoSesion)}`
+        `${API_URL}/api/users/profile/${encodeURIComponent(correoSesion)}`
       );
 
       const data = await res.json();
@@ -95,7 +96,7 @@ function Perfil() {
 
     try {
       const res = await fetch(
-        `https://ecommerce-backend-k2b7.onrender.com/api/users/profile/${encodeURIComponent(correoAnterior)}`,
+        `${API_URL}/api/users/profile/${encodeURIComponent(correoAnterior)}`,
         {
           method: "PUT",
           headers: {
@@ -148,7 +149,7 @@ function Perfil() {
 
     try {
       const res = await fetch(
-        `https://ecommerce-backend-k2b7.onrender.com/api/users/change-password/${encodeURIComponent(correoSesion)}`,
+        `${API_URL}/api/users/change-password/${encodeURIComponent(correoSesion)}`,
         {
           method: "PUT",
           headers: {

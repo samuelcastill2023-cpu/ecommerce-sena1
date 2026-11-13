@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ function Checkout() {
     const cargarUsuario = async () => {
       try {
         const res = await fetch(
-          `https://ecommerce-backend-k2b7.onrender.com/api/users/profile/${encodeURIComponent(correo)}`
+          `${API_URL}/api/users/profile/${encodeURIComponent(correo)}`
         );
 
         const data = await res.json();
@@ -164,7 +165,7 @@ function Checkout() {
     try {
       // 📡 Guardar pedido en MongoDB
       const res = await fetch(
-        "https://ecommerce-backend-k2b7.onrender.com/api/orders",
+        `${API_URL}/api/orders`,
         {
           method: "POST",
           headers: {

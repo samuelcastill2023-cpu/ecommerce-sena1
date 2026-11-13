@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from "../config";
 
 function MisPedidos() {
   const [pedidos, setPedidos] = useState([]);
@@ -16,7 +17,7 @@ function MisPedidos() {
 
       try {
         const res = await fetch(
-          `https://ecommerce-backend-k2b7.onrender.com/api/orders/usuario/${encodeURIComponent(email)}`
+          `${API_URL}/api/orders/usuario/${encodeURIComponent(email)}`
         );
 
         const data = await res.json();

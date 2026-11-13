@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 
 function Login() {
   const [correo, setCorreo] = useState("");
@@ -14,7 +15,7 @@ function Login() {
     }
 
     try {
-      const res = await fetch("https://ecommerce-backend-k2b7.onrender.com/api/users/login", {
+      const res = await fetch(`${API_URL}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
