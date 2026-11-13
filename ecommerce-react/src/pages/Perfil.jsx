@@ -119,6 +119,10 @@ function Perfil() {
       }
 
       localStorage.setItem("sesion", data.user.email);
+      localStorage.setItem("nombreUsuario", data.user.name);
+
+      // 🔥 Avisar al Navbar que cambió el nombre
+      window.dispatchEvent(new Event("sesionActualizada"));
 
       setUsuario(data.user);
 
