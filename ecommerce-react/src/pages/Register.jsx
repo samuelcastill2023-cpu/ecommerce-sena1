@@ -22,8 +22,17 @@ function Register() {
   };
 
   const handleRegister = async () => {
-    if (!form.nombre || !form.correo || !form.password) {
-      alert("Completa los campos obligatorios");
+    // 📝 Validar que todos los campos estén llenos
+    if (
+      !form.nombre ||
+      !form.correo ||
+      !form.password ||
+      !form.telefono ||
+      !form.direccion ||
+      !form.ciudad ||
+      !form.fecha
+    ) {
+      alert("Completa todos los campos");
       return;
     }
 

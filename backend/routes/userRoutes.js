@@ -15,7 +15,16 @@ router.post("/register", async (req, res) => {
       birthdate
     } = req.body;
 
-    if (!name || !email || !password) {
+    // Validar que lleguen todos los datos
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !phone ||
+      !address ||
+      !city ||
+      !birthdate
+    ) {
       return res.status(400).json({
         message: "Faltan datos obligatorios"
       });
