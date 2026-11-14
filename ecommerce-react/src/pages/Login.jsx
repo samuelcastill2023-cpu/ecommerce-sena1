@@ -33,6 +33,8 @@ function Login() {
       if (res.ok) {
   localStorage.setItem("sesion", data.user.email);
   localStorage.setItem("nombreUsuario", data.user.name);
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("rol", data.user.rol);
 
   // 🔥 Avisar al Navbar que hay sesión
   window.dispatchEvent(new Event("sesionActualizada"));

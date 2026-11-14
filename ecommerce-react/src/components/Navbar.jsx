@@ -62,6 +62,8 @@ function Navbar() {
   const cerrarSesion = () => {
     localStorage.removeItem("sesion");
     localStorage.removeItem("nombreUsuario");
+    localStorage.removeItem("token");
+    localStorage.removeItem("rol");
     window.location.reload();
   };
 

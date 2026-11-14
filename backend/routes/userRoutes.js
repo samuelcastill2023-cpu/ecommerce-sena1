@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // 🔐 REGISTER
 router.post("/register", async (req, res) => {
@@ -94,8 +95,16 @@ router.post("/login", async (req, res) => {
     // 🔒 Quitar la contraseña antes de responder
     user.password = undefined;
 
+    // 🎫 Crear el token con el id y el rol del usuario
+    const token = jwt.sign(
+      { id: user._id, rol: user.rol },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
     res.json({
       message: "Autenticación correcta",
+      token,
       user
     });
 

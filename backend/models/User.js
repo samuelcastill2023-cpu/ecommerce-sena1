@@ -30,6 +30,11 @@ const UserSchema = new mongoose.Schema({
   birthdate: {
     type: Date,
     required: true
+  },
+  rol: {
+    type: String,
+    enum: ["cliente", "admin"],
+    default: "cliente" // 👤 Todo usuario nuevo es cliente
   }
 });
 
