@@ -256,78 +256,117 @@ function Admin() {
 
       <div className="mis-pedidos-header">
         <h1>Panel de administración 👑</h1>
-        <p>Gestiona los pedidos y los usuarios de la tienda.</p>
+        <p>Gestiona los productos, pedidos y usuarios de la tienda.</p>
       </div>
 
       {/* ===== PRODUCTOS ===== */}
       <div className="mis-pedidos-contenedor">
-        <h2>Productos ({productos.length})</h2>
+        <h2 className="admin-titulo">🛍️ Productos ({productos.length})</h2>
 
-        <div className="pedido-card">
-          <h3>{editandoId ? "Editar producto ✏️" : "Nuevo producto ➕"}</h3>
+        <div className="pedido-card admin-form-card">
+          <h3 className="admin-subtitulo">
+            {editandoId ? "Editar producto ✏️" : "Nuevo producto ➕"}
+          </h3>
 
           <div className="perfil-form">
-            <input
-              name="nombre"
-              placeholder="Nombre"
-              value={formProducto.nombre}
-              onChange={handleProductoChange}
-            />
+            <div className="campo-perfil">
+              <label>Nombre</label>
+              <input
+                name="nombre"
+                placeholder="Ej: Camisa Azul"
+                value={formProducto.nombre}
+                onChange={handleProductoChange}
+              />
+            </div>
 
-            <input
-              type="number"
-              name="precio"
-              placeholder="Precio"
-              value={formProducto.precio}
-              onChange={handleProductoChange}
-            />
+            <div className="perfil-fila">
+              <div className="campo-perfil">
+                <label>Precio</label>
+                <input
+                  type="number"
+                  name="precio"
+                  placeholder="Ej: 60000"
+                  value={formProducto.precio}
+                  onChange={handleProductoChange}
+                />
+              </div>
 
-            <input
-              name="imagen"
-              placeholder="URL de la imagen"
-              value={formProducto.imagen}
-              onChange={handleProductoChange}
-            />
+              <div className="campo-perfil">
+                <label>Categoría</label>
+                <select
+                  name="categoria"
+                  value={formProducto.categoria}
+                  onChange={handleProductoChange}
+                >
+                  <option value="">Selecciona la categoría</option>
+                  <option value="Ropa">Ropa</option>
+                  <option value="Calzado">Calzado</option>
+                  <option value="Accesorios">Accesorios</option>
+                </select>
+              </div>
+            </div>
 
-            <select
-              name="categoria"
-              value={formProducto.categoria}
-              onChange={handleProductoChange}
-            >
-              <option value="">Selecciona la categoría</option>
-              <option value="Ropa">Ropa</option>
-              <option value="Calzado">Calzado</option>
-              <option value="Accesorios">Accesorios</option>
-            </select>
+            <div className="campo-perfil">
+              <label>URL de la imagen</label>
+              <input
+                name="imagen"
+                placeholder="https://..."
+                value={formProducto.imagen}
+                onChange={handleProductoChange}
+              />
+            </div>
 
-            <button onClick={guardarProducto}>
-              {editandoId ? "Guardar cambios" : "Crear producto"}
-            </button>
-
-            {editandoId && (
-              <button onClick={limpiarFormulario}>
-                Cancelar
+            <div className="admin-botones">
+              <button
+                className="btn-guardar-perfil"
+                onClick={guardarProducto}
+              >
+                {editandoId ? "Guardar cambios" : "Crear producto"}
               </button>
-            )}
+
+              {editandoId && (
+                <button
+                  className="btn-admin-secundario"
+                  onClick={limpiarFormulario}
+                >
+                  Cancelar
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {productos.map((producto) => (
           <div className="pedido-card" key={producto._id}>
             <div className="pedido-header">
-              <div>
+              {producto.imagen && (
+                <img
+                  className="admin-producto-img"
+                  src={producto.imagen}
+                  alt={producto.nombre}
+                />
+              )}
+
+              <div className="admin-producto-info">
                 <h2>{producto.nombre}</h2>
                 <p className="pedido-fecha">
                   {producto.categoria} — ${producto.precio.toLocaleString()}
                 </p>
               </div>
 
-              <div>
-                <button onClick={() => editarProducto(producto)}>
-                  Editar
-                </button>{" "}
-                <button onClick={() => eliminarProducto(producto._id)}>
-                  Eliminar
+              <div className="admin-botones">
+                <button
+                  className="btn-admin-secundario"
+                  onClick={() => editarProducto(producto)}
+                >
+                  ✏️ Editar
+                </button>
+
+                <button
+                  className="btn-admin-eliminar"
+                  onClick={() => eliminarProducto(producto._id)}
+                >
+                  🗑️ Eliminar
                 </button>
               </div>
             </div>
@@ -337,7 +376,7 @@ function Admin() {
 
       {/* ===== PEDIDOS ===== */}
       <div className="mis-pedidos-contenedor">
-        <h2>Pedidos ({pedidos.length})</h2>
+        <h2 className="admin-titulo">📦 Pedidos ({pedidos.length})</h2>
 
         {pedidos.length === 0 && <p>No hay pedidos todavía.</p>}
 
@@ -355,6 +394,7 @@ function Admin() {
               </div>
 
               <select
+                className="admin-select"
                 value={pedido.estado}
                 onChange={(e) => cambiarEstado(pedido._id, e.target.value)}
               >
@@ -371,7 +411,7 @@ function Admin() {
 
       {/* ===== USUARIOS ===== */}
       <div className="mis-pedidos-contenedor">
-        <h2>Usuarios ({usuarios.length})</h2>
+        <h2 className="admin-titulo">👤 Usuarios ({usuarios.length})</h2>
 
         {usuarios.map((usuario) => (
           <div className="pedido-card" key={usuario._id}>
@@ -385,6 +425,11 @@ function Admin() {
 
               {usuario.email !== localStorage.getItem("sesion") && (
                 <button
+                  className={
+                    usuario.rol === "admin"
+                      ? "btn-admin-eliminar"
+                      : "btn-admin-secundario"
+                  }
                   onClick={() =>
                     cambiarRol(
                       usuario._id,
