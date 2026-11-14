@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 
 // 🔐 REGISTER
 router.post("/register", async (req, res) => {
@@ -38,10 +39,13 @@ router.post("/register", async (req, res) => {
       });
     }
 
+    // 🔒 Cifrar la contraseña antes de guardarla
+    const passwordCifrada = await bcrypt.hash(password, 10);
+
     const newUser = new User({
       name,
       email,
-      password,
+      password: passwordCifrada,
       phone,
       address,
       city,
@@ -78,7 +82,10 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    if (user.password !== password) {
+    // 🔒 Comparar la contraseña escrita con la cifrada
+    const passwordCorrecta = await bcrypt.compare(password, user.password);
+
+    if (!passwordCorrecta) {
       return res.status(401).json({
         message: "Contraseña incorrecta"
       });
@@ -207,7 +214,12 @@ router.put("/change-password/:email", async (req, res) => {
     }
 
     // Comprobar contraseña actual
-    if (user.password !== currentPassword) {
+    const passwordActualCorrecta = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!passwordActualCorrecta) {
       return res.status(401).json({
         message: "La contraseña actual es incorrecta"
       });
@@ -227,7 +239,8 @@ router.put("/change-password/:email", async (req, res) => {
       });
     }
 
-    user.password = newPassword;
+    // 🔒 Guardar la nueva contraseña cifrada
+    user.password = await bcrypt.hash(newPassword, 10);
 
     await user.save();
 
