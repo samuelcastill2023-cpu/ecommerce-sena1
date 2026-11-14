@@ -38,7 +38,12 @@ function Checkout() {
     const cargarUsuario = async () => {
       try {
         const res = await fetch(
-          `${API_URL}/api/users/profile/${encodeURIComponent(correo)}`
+          `${API_URL}/api/users/profile/${encodeURIComponent(correo)}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token")
+            }
+          }
         );
 
         const data = await res.json();
@@ -169,7 +174,8 @@ function Checkout() {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token")
           },
           body: JSON.stringify(pedido)
         }

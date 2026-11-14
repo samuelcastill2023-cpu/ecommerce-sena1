@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const Order = require("../models/Order");
+const User = require("../models/User");
+const verificarToken = require("../middleware/verificarToken");
 
 // 🛒 CREAR PEDIDO
-router.post("/", async (req, res) => {
+router.post("/", verificarToken, async (req, res) => {
   try {
     const {
       numeroPedido,
@@ -66,9 +68,18 @@ router.post("/", async (req, res) => {
 });
 
 // 📦 OBTENER PEDIDOS DE UN USUARIO
-router.get("/usuario/:email", async (req, res) => {
+router.get("/usuario/:email", verificarToken, async (req, res) => {
   try {
     const email = req.params.email;
+
+    // 🚫 Solo puedes ver tus propios pedidos
+    const usuarioSesion = await User.findById(req.usuario.id);
+
+    if (!usuarioSesion || usuarioSesion.email !== email) {
+      return res.status(403).json({
+        message: "No tienes permiso para ver estos pedidos"
+      });
+    }
 
     const pedidos = await Order.find({
       "usuario.email": email

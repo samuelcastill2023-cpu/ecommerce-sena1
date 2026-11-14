@@ -17,7 +17,12 @@ function MisPedidos() {
 
       try {
         const res = await fetch(
-          `${API_URL}/api/orders/usuario/${encodeURIComponent(email)}`
+          `${API_URL}/api/orders/usuario/${encodeURIComponent(email)}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token")
+            }
+          }
         );
 
         const data = await res.json();

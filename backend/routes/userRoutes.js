@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const verificarToken = require("../middleware/verificarToken");
 
 // 🔐 REGISTER
 router.post("/register", async (req, res) => {
@@ -119,7 +120,7 @@ router.post("/login", async (req, res) => {
 
 
 // 👤 OBTENER PERFIL
-router.get("/profile/:email", async (req, res) => {
+router.get("/profile/:email", verificarToken, async (req, res) => {
   try {
     const { email } = req.params;
 
@@ -128,6 +129,13 @@ router.get("/profile/:email", async (req, res) => {
     if (!user) {
       return res.status(404).json({
         message: "Usuario no encontrado"
+      });
+    }
+
+    // 🚫 Solo puedes ver o cambiar tu propia cuenta
+    if (user._id.toString() !== req.usuario.id) {
+      return res.status(403).json({
+        message: "No tienes permiso para esta cuenta"
       });
     }
 
@@ -146,7 +154,7 @@ router.get("/profile/:email", async (req, res) => {
 
 
 // ✏️ ACTUALIZAR PERFIL
-router.put("/profile/:email", async (req, res) => {
+router.put("/profile/:email", verificarToken, async (req, res) => {
   try {
     const { email } = req.params;
 
@@ -164,6 +172,13 @@ router.put("/profile/:email", async (req, res) => {
     if (!user) {
       return res.status(404).json({
         message: "Usuario no encontrado"
+      });
+    }
+
+    // 🚫 Solo puedes ver o cambiar tu propia cuenta
+    if (user._id.toString() !== req.usuario.id) {
+      return res.status(403).json({
+        message: "No tienes permiso para esta cuenta"
       });
     }
 
@@ -207,7 +222,7 @@ router.put("/profile/:email", async (req, res) => {
 
 
 // 🔐 CAMBIAR CONTRASEÑA
-router.put("/change-password/:email", async (req, res) => {
+router.put("/change-password/:email", verificarToken, async (req, res) => {
   try {
     const { email } = req.params;
 
@@ -223,6 +238,13 @@ router.put("/change-password/:email", async (req, res) => {
     if (!user) {
       return res.status(404).json({
         message: "Usuario no encontrado"
+      });
+    }
+
+    // 🚫 Solo puedes ver o cambiar tu propia cuenta
+    if (user._id.toString() !== req.usuario.id) {
+      return res.status(403).json({
+        message: "No tienes permiso para esta cuenta"
       });
     }
 

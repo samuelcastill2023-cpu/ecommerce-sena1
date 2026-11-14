@@ -30,7 +30,12 @@ function Perfil() {
 
     try {
       const res = await fetch(
-        `${API_URL}/api/users/profile/${encodeURIComponent(correoSesion)}`
+        `${API_URL}/api/users/profile/${encodeURIComponent(correoSesion)}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }
       );
 
       const data = await res.json();
@@ -100,7 +105,8 @@ function Perfil() {
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token")
           },
           body: JSON.stringify({
             name: form.nombre,
@@ -153,7 +159,8 @@ function Perfil() {
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token")
           },
           body: JSON.stringify({
             currentPassword: passwordForm.actual,
