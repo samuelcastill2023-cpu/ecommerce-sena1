@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Order = require("../models/Order");
 const User = require("../models/User");
+const Product = require("../models/Product");
 const verificarToken = require("../middleware/verificarToken");
 const esAdmin = require("../middleware/esAdmin");
 
@@ -11,19 +12,15 @@ router.post("/", verificarToken, async (req, res) => {
   try {
     const {
       numeroPedido,
-      usuario,
       productos,
-      total,
       metodoPago
     } = req.body;
 
     // Validar datos principales
     if (
       !numeroPedido ||
-      !usuario ||
       !productos ||
       productos.length === 0 ||
-      !total ||
       !metodoPago
     ) {
       return res.status(400).json({
@@ -42,11 +39,50 @@ router.post("/", verificarToken, async (req, res) => {
       });
     }
 
+    // 👤 Los datos del cliente salen de la BD (del token), no del navegador
+    const user = await User.findById(req.usuario.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Usuario no encontrado"
+      });
+    }
+
+    const usuario = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      address: user.address,
+      city: user.city
+    };
+
+    // 💰 Los precios salen de la BD, no del navegador
+    const productosPedido = [];
+    let total = 0;
+
+    for (const item of productos) {
+      const producto = await Product.findById(item._id);
+
+      if (!producto) {
+        return res.status(400).json({
+          message: "Un producto del carrito ya no existe, vacía el carrito"
+        });
+      }
+
+      productosPedido.push({
+        nombre: producto.nombre,
+        precio: producto.precio,
+        imagen: producto.imagen || ""
+      });
+
+      total = total + producto.precio;
+    }
+
     // Crear pedido
     const nuevoPedido = new Order({
       numeroPedido,
       usuario,
-      productos,
+      productos: productosPedido,
       total,
       metodoPago
     });

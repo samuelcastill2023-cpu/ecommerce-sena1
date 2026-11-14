@@ -157,6 +157,7 @@ function Checkout() {
       },
 
       productos: carrito.map((producto) => ({
+        _id: producto._id,
         nombre: producto.nombre,
         precio: Number(producto.precio),
         imagen: producto.imagen || ""
