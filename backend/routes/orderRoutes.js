@@ -4,6 +4,7 @@ const router = express.Router();
 const Order = require("../models/Order");
 const User = require("../models/User");
 const verificarToken = require("../middleware/verificarToken");
+const esAdmin = require("../middleware/esAdmin");
 
 // 🛒 CREAR PEDIDO
 router.post("/", verificarToken, async (req, res) => {
@@ -92,6 +93,67 @@ router.get("/usuario/:email", verificarToken, async (req, res) => {
 
     res.status(500).json({
       message: "Error al obtener los pedidos"
+    });
+  }
+});
+
+// 👑 ADMIN: VER TODOS LOS PEDIDOS
+router.get("/", verificarToken, esAdmin, async (req, res) => {
+  try {
+    const pedidos = await Order.find().sort({ createdAt: -1 });
+
+    res.status(200).json(pedidos);
+
+  } catch (error) {
+    console.error("Error al obtener pedidos:", error);
+
+    res.status(500).json({
+      message: "Error al obtener los pedidos"
+    });
+  }
+});
+
+// 👑 ADMIN: CAMBIAR ESTADO DE UN PEDIDO
+router.put("/:id/estado", verificarToken, esAdmin, async (req, res) => {
+  try {
+    const { estado } = req.body;
+
+    const estadosValidos = [
+      "Pedido recibido",
+      "En preparación",
+      "Enviado",
+      "Entregado",
+      "Cancelado"
+    ];
+
+    if (!estadosValidos.includes(estado)) {
+      return res.status(400).json({
+        message: "Estado no válido"
+      });
+    }
+
+    const pedido = await Order.findById(req.params.id);
+
+    if (!pedido) {
+      return res.status(404).json({
+        message: "Pedido no encontrado"
+      });
+    }
+
+    pedido.estado = estado;
+
+    await pedido.save();
+
+    res.json({
+      message: "Estado actualizado correctamente",
+      pedido
+    });
+
+  } catch (error) {
+    console.error("Error al cambiar estado:", error);
+
+    res.status(500).json({
+      message: "Error al cambiar el estado"
     });
   }
 });

@@ -37,12 +37,16 @@ function Navbar() {
   const [nombreUsuario, setNombreUsuario] = useState(
     localStorage.getItem("nombreUsuario")
   );
+  const [rol, setRol] = useState(
+    localStorage.getItem("rol")
+  );
 
   // 🔥 Actualizar sesión cuando el usuario inicia sesión
   useEffect(() => {
     const actualizarSesion = () => {
       setUsuario(localStorage.getItem("sesion"));
       setNombreUsuario(localStorage.getItem("nombreUsuario"));
+      setRol(localStorage.getItem("rol"));
     };
 
     window.addEventListener(
@@ -199,6 +203,23 @@ function Navbar() {
                   Mis pedidos
                 </span>
               </Link>
+
+              {/* 👑 Solo lo ve el administrador */}
+              {rol === "admin" && (
+                <Link
+                  to="/admin"
+                  className="menu-opcion"
+                  onClick={() => setMenuAbierto(false)}
+                >
+                  <span className="menu-icono">
+                    👑
+                  </span>
+
+                  <span>
+                    Panel admin
+                  </span>
+                </Link>
+              )}
 
               <button
                 className="menu-opcion menu-logout"

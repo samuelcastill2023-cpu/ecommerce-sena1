@@ -7,6 +7,7 @@ import Perfil from "./pages/Perfil";
 import Checkout from "./pages/Checkout";
 import Confirmacion from "./pages/Confirmacion";
 import MisPedidos from "./components/MisPedidos";
+import Admin from "./pages/Admin";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/confirmacion" element={<Confirmacion />} />
         <Route path="/mis-pedidos" element={<MisPedidos />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </>
   );

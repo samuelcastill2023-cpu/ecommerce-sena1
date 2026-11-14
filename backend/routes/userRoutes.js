@@ -4,6 +4,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const verificarToken = require("../middleware/verificarToken");
+const esAdmin = require("../middleware/esAdmin");
 
 // 🔐 REGISTER
 router.post("/register", async (req, res) => {
@@ -288,6 +289,68 @@ router.put("/change-password/:email", verificarToken, async (req, res) => {
 
     res.status(500).json({
       message: "Error al cambiar la contraseña"
+    });
+  }
+});
+
+
+// 👑 ADMIN: VER TODOS LOS USUARIOS
+router.get("/", verificarToken, esAdmin, async (req, res) => {
+  try {
+    const usuarios = await User.find().sort({ name: 1 });
+
+    res.json(usuarios);
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error al obtener los usuarios"
+    });
+  }
+});
+
+
+// 👑 ADMIN: CAMBIAR ROL DE UN USUARIO
+router.put("/:id/rol", verificarToken, esAdmin, async (req, res) => {
+  try {
+    const { rol } = req.body;
+
+    if (rol !== "cliente" && rol !== "admin") {
+      return res.status(400).json({
+        message: "Rol no válido"
+      });
+    }
+
+    // 🚫 Un admin no puede quitarse el rol a sí mismo
+    if (req.params.id === req.usuario.id) {
+      return res.status(400).json({
+        message: "No puedes cambiar tu propio rol"
+      });
+    }
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Usuario no encontrado"
+      });
+    }
+
+    user.rol = rol;
+
+    await user.save();
+
+    res.json({
+      message: "Rol actualizado correctamente",
+      user
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error al cambiar el rol"
     });
   }
 });
