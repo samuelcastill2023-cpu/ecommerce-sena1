@@ -55,8 +55,7 @@ router.post("/register", async (req, res) => {
     await newUser.save();
 
     res.status(201).json({
-      message: "Usuario registrado correctamente",
-      user: newUser
+      message: "Usuario registrado correctamente"
     });
 
   } catch (error) {
@@ -74,7 +73,8 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    // Pedir también la contraseña (está oculta en el modelo)
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
       return res.status(404).json({
@@ -90,6 +90,9 @@ router.post("/login", async (req, res) => {
         message: "Contraseña incorrecta"
       });
     }
+
+    // 🔒 Quitar la contraseña antes de responder
+    user.password = undefined;
 
     res.json({
       message: "Autenticación correcta",
@@ -205,7 +208,8 @@ router.put("/change-password/:email", async (req, res) => {
       confirmPassword
     } = req.body;
 
-    const user = await User.findOne({ email });
+    // Pedir también la contraseña (está oculta en el modelo)
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
       return res.status(404).json({
