@@ -1707,98 +1707,29 @@ footer {
 
 /* ===== PANEL ADMIN ===== */
 
-.admin-titulo {
-  margin: 35px 0 15px;
-  text-align: left;
-}
-
-.admin-subtitulo {
-  margin-top: 0;
-  color: #1e3a8a;
-}
-
-.admin-form-card {
-  border-top: 4px solid #1e3a8a;
-  padding: 22px;
-}
-
-.admin-form-card .campo-perfil select {
-  width: 100%;
-}
-
-/* Separar la imagen del texto */
-.pedido-header {
-  gap: 15px;
-}
-
-.campo-perfil select,
-.admin-select {
-  box-sizing: border-box;
+.campo-perfil select {
   padding: 11px 12px;
   border: 1px solid #ccd5e3;
   border-radius: 7px;
   font-family: var(--sans);
   font-size: 15px;
-  background-color: white;
-  cursor: pointer;
 }
 
-.campo-perfil select:focus,
-.admin-select:focus {
-  border-color: #2563eb;
-  outline: none;
-}
-
-.admin-botones {
+.admin-fila {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
 }
 
-.btn-admin-secundario,
-.btn-admin-eliminar {
-  border: none;
-  padding: 10px 16px;
-  border-radius: 7px;
+.admin-fila p {
+  margin: 3px 0 0;
+  color: #666;
   font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
 }
 
-.btn-admin-secundario {
-  background-color: #e8eefc;
-  color: #1e3a8a;
-}
-
-.btn-admin-secundario:hover {
-  background-color: #d4defa;
-}
-
-.btn-admin-eliminar {
-  background-color: #fde8e8;
-  color: #dc3545;
-}
-
-.btn-admin-eliminar:hover {
-  background-color: #dc3545;
-  color: white;
-}
-
-.admin-producto-img {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.admin-producto-info {
-  flex: 1;
-}
-
-@media (max-width: 768px) {
-  .admin-producto-img {
-    width: 55px;
-    height: 55px;
-  }
+.admin-fila .btn-editar-datos {
+  margin-top: 0;
 }
