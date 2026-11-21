@@ -17,6 +17,11 @@ function Admin() {
   });
   const [editandoId, setEditandoId] = useState(null);
 
+  // 🏷️ Categorías
+  const [categorias, setCategorias] = useState([]);
+  const [nombreCategoria, setNombreCategoria] = useState("");
+  const [editandoCategoriaId, setEditandoCategoriaId] = useState(null);
+
   const estados = [
     "Pedido recibido",
     "En preparación",
@@ -53,12 +58,16 @@ function Admin() {
         const resProductos = await fetch(`${API_URL}/api/products`);
         const dataProductos = await resProductos.json();
 
+        const resCategorias = await fetch(`${API_URL}/api/categories`);
+        const dataCategorias = await resCategorias.json();
+
         if (!resPedidos.ok || !resUsuarios.ok) {
           alert(dataPedidos.message || dataUsuarios.message);
         } else {
           setPedidos(dataPedidos);
           setUsuarios(dataUsuarios);
           setProductos(dataProductos);
+          setCategorias(dataCategorias);
         }
       } catch (error) {
         console.error(error);
@@ -218,6 +227,146 @@ function Admin() {
     }
   };
 
+  // 🏷️ Guardar categoría (crear o editar)
+  const guardarCategoria = async () => {
+    if (!nombreCategoria) {
+      alert("Escribe el nombre de la categoría");
+      return;
+    }
+
+    // Si estamos editando se usa PUT, si no POST
+    const url = editandoCategoriaId
+      ? `${API_URL}/api/categories/${editandoCategoriaId}`
+      : `${API_URL}/api/categories`;
+
+    const metodo = editandoCategoriaId ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(url, {
+        method: metodo,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify({ nombre: nombreCategoria })
+      });
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
+
+      const data = await res.json();
+
+      alert(data.message);
+
+      if (!res.ok) {
+        return;
+      }
+
+      if (editandoCategoriaId) {
+        // Los productos de esa categoría también cambian de nombre
+        const anterior = categorias.find(
+          (categoria) => categoria._id === editandoCategoriaId
+        );
+
+        setCategorias(
+          categorias.map((categoria) =>
+            categoria._id === editandoCategoriaId ? data.categoria : categoria
+          )
+        );
+
+        setProductos(
+          productos.map((producto) =>
+            producto.categoria === anterior.nombre
+              ? { ...producto, categoria: data.categoria.nombre }
+              : producto
+          )
+        );
+      } else {
+        setCategorias([...categorias, data.categoria]);
+      }
+
+      setNombreCategoria("");
+      setEditandoCategoriaId(null);
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor");
+    }
+  };
+
+  // ✏️ Pasar una categoría al formulario para editarla
+  const editarCategoria = (categoria) => {
+    setNombreCategoria(categoria.nombre);
+    setEditandoCategoriaId(categoria._id);
+  };
+
+  // 🧹 Cancelar la edición de la categoría
+  const cancelarCategoria = () => {
+    setNombreCategoria("");
+    setEditandoCategoriaId(null);
+  };
+
+  // 🗑️ Eliminar categoría
+  const eliminarCategoria = async (id) => {
+    if (!window.confirm("¿Seguro que quieres eliminar esta categoría?")) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/api/categories/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
+      });
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
+
+      const data = await res.json();
+
+      alert(data.message);
+
+      if (res.ok) {
+        setCategorias(categorias.filter((categoria) => categoria._id !== id));
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor");
+    }
+  };
+
+  // 📥 Cargar las categorías iniciales cuando no hay ninguna
+  const cargarCategoriasIniciales = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/categories/cargar-iniciales`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
+      });
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
+
+      const data = await res.json();
+
+      alert(data.message);
+
+      if (res.ok) {
+        setCategorias(data.categorias);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor");
+    }
+  };
+
   // 📥 Cargar los productos iniciales cuando la tienda está vacía
   const cargarIniciales = async () => {
     try {
@@ -311,8 +460,93 @@ function Admin() {
 
       <div className="perfil-header">
         <h1>Panel de administración</h1>
-        <p>Administra los productos, pedidos y usuarios de la tienda.</p>
+        <p>Administra las categorías, productos, pedidos y usuarios de la tienda.</p>
       </div>
+
+      {/* ===== CATEGORÍAS ===== */}
+      <section className="perfil-card">
+
+        <div className="perfil-card-header">
+          <h2>🏷️ Categorías ({categorias.length})</h2>
+          <p>Categorías en las que se organizan los productos.</p>
+        </div>
+
+        {categorias.length === 0 && (
+          <>
+            <p>No hay categorías todavía.</p>
+
+            <button
+              className="btn-guardar-perfil"
+              onClick={cargarCategoriasIniciales}
+            >
+              Cargar categorías iniciales
+            </button>
+          </>
+        )}
+
+        <div className="perfil-form">
+
+          <div className="campo-perfil">
+            <label>
+              {editandoCategoriaId ? "Editar categoría" : "Nueva categoría"}
+            </label>
+            <input
+              type="text"
+              value={nombreCategoria}
+              onChange={(e) => setNombreCategoria(e.target.value)}
+            />
+          </div>
+
+          <button
+            className="btn-guardar-perfil"
+            onClick={guardarCategoria}
+          >
+            {editandoCategoriaId ? "Guardar cambios" : "Crear categoría"}
+          </button>
+
+          {editandoCategoriaId && (
+            <button
+              className="btn-editar-datos"
+              onClick={cancelarCategoria}
+            >
+              Cancelar
+            </button>
+          )}
+
+        </div>
+
+        {categorias.map((categoria) => (
+          <div className="admin-fila" key={categoria._id}>
+            <div>
+              <strong>{categoria.nombre}</strong>
+              <p>
+                {
+                  productos.filter(
+                    (producto) => producto.categoria === categoria.nombre
+                  ).length
+                }{" "}
+                productos
+              </p>
+            </div>
+
+            <div>
+              <button
+                className="btn-editar-datos"
+                onClick={() => editarCategoria(categoria)}
+              >
+                Editar
+              </button>{" "}
+              <button
+                className="btn-editar-datos"
+                onClick={() => eliminarCategoria(categoria._id)}
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        ))}
+
+      </section>
 
       {/* ===== FORMULARIO DE PRODUCTO ===== */}
       <section className="perfil-card">
@@ -354,9 +588,11 @@ function Admin() {
                 onChange={handleProductoChange}
               >
                 <option value="">Selecciona</option>
-                <option value="Ropa">Ropa</option>
-                <option value="Calzado">Calzado</option>
-                <option value="Accesorios">Accesorios</option>
+                {categorias.map((categoria) => (
+                  <option key={categoria._id} value={categoria.nombre}>
+                    {categoria.nombre}
+                  </option>
+                ))}
               </select>
             </div>
 

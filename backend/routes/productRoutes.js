@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Product = require("../models/Product");
+const Category = require("../models/Category");
 const verificarToken = require("../middleware/verificarToken");
 const esAdmin = require("../middleware/esAdmin");
 const productosIniciales = require("../data/productos.json");
@@ -67,6 +68,15 @@ router.post("/", verificarToken, esAdmin, async (req, res) => {
       });
     }
 
+    // 🏷️ La categoría debe existir
+    const categoriaExiste = await Category.findOne({ nombre: categoria });
+
+    if (!categoriaExiste) {
+      return res.status(400).json({
+        message: "La categoría no existe"
+      });
+    }
+
     const nuevoProducto = new Product({
       nombre,
       precio: Number(precio),
@@ -104,6 +114,15 @@ router.put("/:id", verificarToken, esAdmin, async (req, res) => {
     if (Number(precio) <= 0) {
       return res.status(400).json({
         message: "El precio debe ser mayor a 0"
+      });
+    }
+
+    // 🏷️ La categoría debe existir
+    const categoriaExiste = await Category.findOne({ nombre: categoria });
+
+    if (!categoriaExiste) {
+      return res.status(400).json({
+        message: "La categoría no existe"
       });
     }
 

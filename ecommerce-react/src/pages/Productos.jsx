@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../config";
 
 function Productos() {
-  const categorias = ["Ropa", "Calzado", "Accesorios"];
-  const [indices, setIndices] = useState({ Ropa: 0, Calzado: 0, Accesorios: 0 });
+  const [categorias, setCategorias] = useState([]);
+  const [indices, setIndices] = useState({});
   const [productos, setProductos] = useState([]);
 
   // 📡 Cargar productos desde la base de datos
@@ -15,6 +15,14 @@ function Productos() {
 
         if (res.ok) {
           setProductos(data);
+        }
+
+        // 🏷️ Cargar categorías (solo se usan los nombres)
+        const resCategorias = await fetch(`${API_URL}/api/categories`);
+        const dataCategorias = await resCategorias.json();
+
+        if (resCategorias.ok) {
+          setCategorias(dataCategorias.map((categoria) => categoria.nombre));
         }
       } catch (error) {
         console.error("Error al cargar productos:", error);
@@ -49,7 +57,7 @@ function Productos() {
   const mover = (cat, direccion) => {
     const lista = productos.filter(p => p.categoria === cat);
     setIndices(prev => {
-      let nuevo = prev[cat] + direccion;
+      let nuevo = (prev[cat] || 0) + direccion;
       if (nuevo < 0) nuevo = 0;
       if (nuevo > lista.length - 3) nuevo = lista.length - 3; // <-- Cambiado a 3
       return { ...prev, [cat]: nuevo };
@@ -61,15 +69,20 @@ function Productos() {
       <h2>Productos</h2>
       {categorias.map(cat => {
         const lista = productos.filter(p => p.categoria === cat);
+        const inicio = indices[cat] || 0;
+
+        // No mostrar categorías sin productos
+        if (lista.length === 0) return null;
+
         return (
           <section key={cat} className="categoria">
             <h3>{cat}</h3>
 
             <div className="carrusel">
-              <button onClick={() => mover(cat, -1)} disabled={indices[cat] === 0}>⬅️</button>
+              <button onClick={() => mover(cat, -1)} disabled={inicio === 0}>⬅️</button>
 
               <div className="grid-productos">
-                {lista.slice(indices[cat], indices[cat] + 3).map(producto => ( // <-- Cambiado a 3
+                {lista.slice(inicio, inicio + 3).map(producto => ( // <-- Cambiado a 3
                   <div className="producto" key={producto._id}>
                     <img src={producto.imagen} alt={producto.nombre} />
                     <h3>{producto.nombre}</h3>
@@ -79,7 +92,7 @@ function Productos() {
                 ))}
               </div>
 
-              <button onClick={() => mover(cat, 1)} disabled={indices[cat] >= lista.length - 3}>➡️</button> {/* <-- Cambiado a 3 */}
+              <button onClick={() => mover(cat, 1)} disabled={inicio >= lista.length - 3}>➡️</button> {/* <-- Cambiado a 3 */}
             </div>
           </section>
         );
