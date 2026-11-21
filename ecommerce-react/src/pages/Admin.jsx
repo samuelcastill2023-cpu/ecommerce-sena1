@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../config";
+import { sesionVencida } from "../sesion";
 
 function Admin() {
   const [pedidos, setPedidos] = useState([]);
@@ -38,6 +39,12 @@ function Admin() {
         };
 
         const resPedidos = await fetch(`${API_URL}/api/orders`, { headers });
+
+        // ⏰ Si la sesión venció, ir al login
+        if (sesionVencida(resPedidos)) {
+          return;
+        }
+
         const dataPedidos = await resPedidos.json();
 
         const resUsuarios = await fetch(`${API_URL}/api/users`, { headers });
@@ -76,6 +83,11 @@ function Admin() {
         body: JSON.stringify({ estado })
       });
 
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
+
       const data = await res.json();
 
       if (!res.ok) {
@@ -106,6 +118,11 @@ function Admin() {
         },
         body: JSON.stringify({ rol })
       });
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
 
       const data = await res.json();
 
@@ -171,6 +188,11 @@ function Admin() {
         body: JSON.stringify(formProducto)
       });
 
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
+
       const data = await res.json();
 
       alert(data.message);
@@ -205,6 +227,11 @@ function Admin() {
           Authorization: "Bearer " + localStorage.getItem("token")
         }
       });
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
 
       const data = await res.json();
 
@@ -243,6 +270,11 @@ function Admin() {
           Authorization: "Bearer " + localStorage.getItem("token")
         }
       });
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
 
       const data = await res.json();
 

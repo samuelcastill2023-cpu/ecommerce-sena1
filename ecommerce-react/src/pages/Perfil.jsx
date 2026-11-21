@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../config";
+import { sesionVencida } from "../sesion";
 
 function Perfil() {
   const [usuario, setUsuario] = useState(null);
@@ -37,6 +38,11 @@ function Perfil() {
           }
         }
       );
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
 
       const data = await res.json();
 
@@ -118,6 +124,11 @@ function Perfil() {
         }
       );
 
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
+
       const data = await res.json();
 
       if (!res.ok) {
@@ -169,6 +180,11 @@ function Perfil() {
           })
         }
       );
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
 
       const data = await res.json();
 

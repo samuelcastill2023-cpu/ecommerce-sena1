@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config";
+import { sesionVencida } from "../sesion";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -42,6 +43,11 @@ function Checkout() {
             }
           }
         );
+
+        // ⏰ Si la sesión venció, ir al login
+        if (sesionVencida(res)) {
+          return;
+        }
 
         const data = await res.json();
 
@@ -162,6 +168,11 @@ function Checkout() {
           body: JSON.stringify(pedido)
         }
       );
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
 
       const data = await res.json();
 

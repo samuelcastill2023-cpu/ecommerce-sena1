@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from "../config";
+import { sesionVencida } from "../sesion";
 
 function MisPedidos() {
   const [pedidos, setPedidos] = useState([]);
@@ -24,6 +25,11 @@ function MisPedidos() {
             }
           }
         );
+
+        // ⏰ Si la sesión venció, ir al login
+        if (sesionVencida(res)) {
+          return;
+        }
 
         const data = await res.json();
 

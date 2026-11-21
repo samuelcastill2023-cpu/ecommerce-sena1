@@ -281,7 +281,7 @@ router.put("/change-password/:email", verificarToken, async (req, res) => {
     );
 
     if (!passwordActualCorrecta) {
-      return res.status(401).json({
+      return res.status(400).json({
         message: "La contraseña actual es incorrecta"
       });
     }
