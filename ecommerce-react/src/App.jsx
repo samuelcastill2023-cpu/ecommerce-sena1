@@ -8,6 +8,8 @@ import Checkout from "./pages/Checkout";
 import Confirmacion from "./pages/Confirmacion";
 import MisPedidos from "./components/MisPedidos";
 import Admin from "./pages/Admin";
+import OlvidePassword from "./pages/OlvidePassword";
+import RestablecerPassword from "./pages/RestablecerPassword";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -27,6 +29,8 @@ function App() {
         <Route path="/confirmacion" element={<Confirmacion />} />
         <Route path="/mis-pedidos" element={<MisPedidos />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/olvide-password" element={<OlvidePassword />} />
+        <Route path="/restablecer/:token" element={<RestablecerPassword />} />
       </Routes>
 
       {/* ===== PIE DE PÁGINA ===== */}

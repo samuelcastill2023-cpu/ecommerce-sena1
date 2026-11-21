@@ -35,6 +35,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ["cliente", "admin"],
     default: "cliente" // 👤 Todo usuario nuevo es cliente
+  },
+  // 🔑 Para "olvidé mi contraseña" (el token se guarda cifrado)
+  resetToken: {
+    type: String,
+    select: false
+  },
+  resetExpira: {
+    type: Date
   }
 });
 

@@ -4,6 +4,7 @@ const router = express.Router();
 const Order = require("../models/Order");
 const User = require("../models/User");
 const Product = require("../models/Product");
+const { enviarCorreo, plantilla } = require("../utils/enviarCorreo");
 const verificarToken = require("../middleware/verificarToken");
 const esAdmin = require("../middleware/esAdmin");
 
@@ -89,6 +90,31 @@ router.post("/", verificarToken, async (req, res) => {
 
     // Guardar en MongoDB
     await nuevoPedido.save();
+
+    // 📧 Correo de confirmación del pedido
+    let filas = "";
+
+    for (const item of productosPedido) {
+      filas +=
+        "<tr>" +
+        "<td style='padding:6px 0;'>" + item.nombre + " x" + item.cantidad + "</td>" +
+        "<td style='padding:6px 0; text-align:right;'>$" +
+        (item.precio * item.cantidad).toLocaleString("es-CO") +
+        "</td>" +
+        "</tr>";
+    }
+
+    await enviarCorreo(
+      usuario.email,
+      "Pedido " + numeroPedido + " confirmado - eMarketPro",
+      plantilla(
+        "¡Gracias por tu compra, " + usuario.name + "!",
+        "<p>Recibimos tu pedido <strong>" + numeroPedido + "</strong>.</p>" +
+        "<table style='width:100%; border-collapse:collapse;'>" + filas + "</table>" +
+        "<p style='font-size:17px;'><strong>Total: $" + total.toLocaleString("es-CO") + "</strong></p>" +
+        "<p>Método de pago: " + metodoPago + "<br>Envío a: " + usuario.address + ", " + usuario.city + "</p>"
+      )
+    );
 
     res.status(201).json({
       message: "Pedido registrado correctamente",

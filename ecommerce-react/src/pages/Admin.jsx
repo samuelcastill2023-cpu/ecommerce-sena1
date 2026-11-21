@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../config";
 import { sesionVencida } from "../sesion";
-import { FiTag, FiEdit2, FiShoppingBag, FiList, FiPackage, FiUsers } from "react-icons/fi";
+import { FiTag, FiEdit2, FiShoppingBag, FiList, FiPackage, FiUsers, FiMail } from "react-icons/fi";
 
 function Admin() {
   const [pedidos, setPedidos] = useState([]);
@@ -22,6 +22,14 @@ function Admin() {
   const [categorias, setCategorias] = useState([]);
   const [nombreCategoria, setNombreCategoria] = useState("");
   const [editandoCategoriaId, setEditandoCategoriaId] = useState(null);
+
+  // 📧 Configuración del correo (Brevo)
+  const [formCorreo, setFormCorreo] = useState({
+    remitenteNombre: "",
+    remitenteEmail: "",
+    brevoApiKey: ""
+  });
+  const [apiKeyConfigurada, setApiKeyConfigurada] = useState(false);
 
   const estados = [
     "Pedido recibido",
@@ -61,6 +69,18 @@ function Admin() {
 
         const resCategorias = await fetch(`${API_URL}/api/categories`);
         const dataCategorias = await resCategorias.json();
+
+        const resCorreo = await fetch(`${API_URL}/api/config/correo`, { headers });
+        const dataCorreo = await resCorreo.json();
+
+        if (resCorreo.ok) {
+          setFormCorreo({
+            remitenteNombre: dataCorreo.remitenteNombre,
+            remitenteEmail: dataCorreo.remitenteEmail,
+            brevoApiKey: ""
+          });
+          setApiKeyConfigurada(dataCorreo.apiKeyConfigurada);
+        }
 
         if (!resPedidos.ok || !resUsuarios.ok) {
           alert(dataPedidos.message || dataUsuarios.message);
@@ -222,6 +242,70 @@ function Admin() {
       }
 
       limpiarFormulario();
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor");
+    }
+  };
+
+  // ✏️ Cambiar datos del formulario de correo
+  const handleCorreoChange = (e) => {
+    setFormCorreo({
+      ...formCorreo,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // 💾 Guardar la configuración del correo
+  const guardarCorreo = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/config/correo`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify(formCorreo)
+      });
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
+
+      const data = await res.json();
+
+      alert(data.message);
+
+      if (res.ok) {
+        setApiKeyConfigurada(data.apiKeyConfigurada);
+        // La clave no se vuelve a mostrar
+        setFormCorreo({ ...formCorreo, brevoApiKey: "" });
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor");
+    }
+  };
+
+  // 📨 Enviar un correo de prueba al administrador
+  const probarCorreo = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/config/correo/prueba`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
+      });
+
+      // ⏰ Si la sesión venció, ir al login
+      if (sesionVencida(res)) {
+        return;
+      }
+
+      const data = await res.json();
+
+      alert(data.message);
     } catch (error) {
       console.error(error);
       alert("Error al conectar con el servidor");
@@ -750,6 +834,78 @@ function Admin() {
             )}
           </div>
         ))}
+
+      </section>
+
+      {/* ===== CONFIGURACIÓN DE CORREO ===== */}
+      <section className="perfil-card">
+
+        <div className="perfil-card-header">
+          <h2><FiMail /> Configuración de correo</h2>
+          <p>Datos de Brevo para enviar los correos de la tienda.</p>
+        </div>
+
+        <div className="perfil-form">
+
+          <div className="perfil-fila">
+
+            <div className="campo-perfil">
+              <label>Nombre del remitente</label>
+              <input
+                type="text"
+                name="remitenteNombre"
+                value={formCorreo.remitenteNombre}
+                onChange={handleCorreoChange}
+              />
+            </div>
+
+            <div className="campo-perfil">
+              <label>Correo del remitente</label>
+              <input
+                type="email"
+                name="remitenteEmail"
+                value={formCorreo.remitenteEmail}
+                onChange={handleCorreoChange}
+              />
+            </div>
+
+          </div>
+
+          <div className="campo-perfil">
+            <label>Clave de la API de Brevo</label>
+            <input
+              type="password"
+              name="brevoApiKey"
+              value={formCorreo.brevoApiKey}
+              onChange={handleCorreoChange}
+              placeholder={
+                apiKeyConfigurada
+                  ? "✓ Configurada (escribe una nueva solo si quieres cambiarla)"
+                  : "Pega aquí la clave de Brevo"
+              }
+            />
+            <small>
+              Por seguridad, la clave guardada nunca se vuelve a mostrar.
+            </small>
+          </div>
+
+          <button
+            className="btn-guardar-perfil"
+            onClick={guardarCorreo}
+          >
+            Guardar configuración
+          </button>
+
+          {apiKeyConfigurada && (
+            <button
+              className="btn-editar-datos"
+              onClick={probarCorreo}
+            >
+              Enviar correo de prueba
+            </button>
+          )}
+
+        </div>
 
       </section>
 
