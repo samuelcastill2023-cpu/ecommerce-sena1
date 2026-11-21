@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Carrito() {
-  const [carrito, setCarrito] = useState([]);
+  // 🔥 Cargar carrito guardado
+  const [carrito, setCarrito] = useState(
+    JSON.parse(localStorage.getItem("carrito")) || []
+  );
   const navigate = useNavigate();
-
-  // 🔥 Cargar carrito
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("carrito")) || [];
-    setCarrito(data);
-  }, []);
 
   // 🔥 Eliminar producto
   const eliminarProducto = (index) => {

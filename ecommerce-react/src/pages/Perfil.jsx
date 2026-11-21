@@ -21,59 +21,60 @@ function Perfil() {
     confirmar: ""
   });
 
-  const cargarPerfil = async () => {
-    const correoSesion = localStorage.getItem("sesion");
+  // 👤 Cargar perfil al abrir la página
+  useEffect(() => {
+    const cargarPerfil = async () => {
+      const correoSesion = localStorage.getItem("sesion");
 
-    if (!correoSesion) {
-      setCargando(false);
-      return;
-    }
-
-    try {
-      const res = await fetch(
-        `${API_URL}/api/users/profile/${encodeURIComponent(correoSesion)}`,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token")
-          }
-        }
-      );
-
-      // ⏰ Si la sesión venció, ir al login
-      if (sesionVencida(res)) {
-        return;
-      }
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "No se pudo cargar el perfil");
+      if (!correoSesion) {
         setCargando(false);
         return;
       }
 
-      setUsuario(data.user);
+      try {
+        const res = await fetch(
+          `${API_URL}/api/users/profile/${encodeURIComponent(correoSesion)}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token")
+            }
+          }
+        );
 
-      setForm({
-        nombre: data.user.name || "",
-        correo: data.user.email || "",
-        telefono: data.user.phone || "",
-        direccion: data.user.address || "",
-        ciudad: data.user.city || "",
-        fecha: data.user.birthdate
-          ? data.user.birthdate.substring(0, 10)
-          : ""
-      });
+        // ⏰ Si la sesión venció, ir al login
+        if (sesionVencida(res)) {
+          return;
+        }
 
-    } catch (error) {
-      console.error(error);
-      alert("Error al conectar con el servidor");
-    }
+        const data = await res.json();
 
-    setCargando(false);
-  };
+        if (!res.ok) {
+          alert(data.message || "No se pudo cargar el perfil");
+          setCargando(false);
+          return;
+        }
 
-  useEffect(() => {
+        setUsuario(data.user);
+
+        setForm({
+          nombre: data.user.name || "",
+          correo: data.user.email || "",
+          telefono: data.user.phone || "",
+          direccion: data.user.address || "",
+          ciudad: data.user.city || "",
+          fecha: data.user.birthdate
+            ? data.user.birthdate.substring(0, 10)
+            : ""
+        });
+
+      } catch (error) {
+        console.error(error);
+        alert("Error al conectar con el servidor");
+      }
+
+      setCargando(false);
+    };
+
     cargarPerfil();
   }, []);
 

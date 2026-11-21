@@ -73,7 +73,6 @@ function Register() {
       alert(data.message);
 
       if (res.ok) {
-        localStorage.setItem("nombre", form.nombre);
         navigate("/login");
       }
 
