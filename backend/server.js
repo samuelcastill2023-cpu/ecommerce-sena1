@@ -14,7 +14,15 @@ const productRoutes = require("./routes/productRoutes");
 const app = express();
 
 // Middlewares
-app.use(cors());
+// 🌐 Solo estas páginas pueden usar la API
+app.use(
+  cors({
+    origin: [
+      "https://visionary-starship-b15a52.netlify.app",
+      "http://localhost:5173"
+    ]
+  })
+);
 app.use(express.json());
 
 // Rutas
