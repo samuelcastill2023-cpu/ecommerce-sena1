@@ -37,6 +37,20 @@ function Register() {
       return;
     }
 
+    // 📧 Validar formato del correo
+    const formatoCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formatoCorreo.test(form.correo)) {
+      alert("El correo no es válido");
+      return;
+    }
+
+    // 🔒 Validar largo de la contraseña
+    if (form.password.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
+
     try {
       const res = await fetch(`${API_URL}/api/users/register`, {
         method: "POST",

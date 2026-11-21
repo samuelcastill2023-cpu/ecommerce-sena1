@@ -34,6 +34,22 @@ router.post("/register", async (req, res) => {
       });
     }
 
+    // 📧 Validar formato del correo (texto@texto.texto)
+    const formatoCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formatoCorreo.test(email)) {
+      return res.status(400).json({
+        message: "El correo no es válido"
+      });
+    }
+
+    // 🔒 Validar largo de la contraseña
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "La contraseña debe tener al menos 6 caracteres"
+      });
+    }
+
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -186,6 +202,15 @@ router.put("/profile/:email", verificarToken, async (req, res) => {
     // 📧 Comprobar si el nuevo correo ya pertenece a OTRO usuario
     if (newEmail && newEmail !== email) {
 
+      // Validar formato del nuevo correo
+      const formatoCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!formatoCorreo.test(newEmail)) {
+        return res.status(400).json({
+          message: "El correo no es válido"
+        });
+      }
+
       const emailExists = await User.findOne({
         email: newEmail
       });
@@ -265,6 +290,13 @@ router.put("/change-password/:email", verificarToken, async (req, res) => {
     if (newPassword !== confirmPassword) {
       return res.status(400).json({
         message: "Las nuevas contraseñas no coinciden"
+      });
+    }
+
+    // 🔒 Validar largo de la nueva contraseña
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        message: "La nueva contraseña debe tener al menos 6 caracteres"
       });
     }
 
