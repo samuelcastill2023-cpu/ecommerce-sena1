@@ -2155,3 +2155,98 @@ p svg {
   }
 
 }
+
+
+/* =========================================
+   MENÚ DESPLEGABLE DEL USUARIO (computador)
+   ========================================= */
+
+.usuario-menu {
+  position: relative;
+}
+
+.nav-links button.usuario-icono {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 22px;
+  padding: 0;
+}
+
+.usuario-icono .flecha {
+  font-size: 14px;
+}
+
+.usuario-desplegable {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  z-index: 1002;
+
+  width: 230px;
+  padding: 8px 0;
+
+  background: white;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+
+  text-align: left;
+}
+
+.usuario-datos {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 16px 12px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 6px;
+}
+
+.usuario-datos strong {
+  color: #111111;
+  font-size: 15px;
+}
+
+.usuario-datos span {
+  color: #777;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-links .usuario-desplegable a,
+.nav-links .usuario-desplegable button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  box-sizing: border-box;
+
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-links .usuario-desplegable a:hover,
+.nav-links .usuario-desplegable button:hover {
+  background-color: #f5f5f5;
+  color: #111111;
+}
+
+.nav-links .usuario-desplegable button {
+  color: #c62828;
+  border-top: 1px solid #eee;
+  margin-top: 6px;
+}
+
+/* Fondo invisible para cerrar el menú al tocar fuera */
+.usuario-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+}

@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logo from "../assets/eMarketPro-logo-blanco.png";
-import { FiMenu, FiX, FiShoppingCart, FiShoppingBag, FiUser, FiPackage, FiShield, FiLogOut, FiLogIn, FiUserPlus } from "react-icons/fi";
+import { FiMenu, FiX, FiShoppingCart, FiShoppingBag, FiUser, FiPackage, FiShield, FiLogOut, FiLogIn, FiUserPlus, FiChevronDown } from "react-icons/fi";
 
 function Navbar() {
   const [cantidad, setCantidad] = useState(0);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [menuUsuario, setMenuUsuario] = useState(false);
 
   // Actualizar carrito
   useEffect(() => {
@@ -116,41 +117,55 @@ function Navbar() {
               </Link>
             </li>
 
-            {/* 💻 Solo se ven en pantallas grandes */}
-            {usuario && (
-              <li className="solo-escritorio">
-                <Link to="/mis-pedidos">
-                  Mis pedidos
-                </Link>
-              </li>
-            )}
-
-            {usuario && rol === "admin" && (
-              <li className="solo-escritorio">
-                <Link to="/admin">
-                  Panel admin
-                </Link>
-              </li>
-            )}
-
           </ul>
 
           {/* OPCIONES DE LA DERECHA */}
           <ul className="nav-links nav-derecha">
 
-            {usuario && (
-              <li className="usuario">
-                <Link to="/perfil">
-                  Hola, {nombreUsuario}
-                </Link>
-              </li>
-            )}
-
-            <li className="solo-escritorio">
+            <li className="solo-escritorio usuario-menu">
               {usuario ? (
-                <button onClick={cerrarSesion}>
-                  Cerrar sesión
-                </button>
+                <>
+                  {/* 👤 Botón que abre el menú del usuario */}
+                  <button
+                    className="usuario-icono"
+                    title="Mi cuenta"
+                    onClick={() => setMenuUsuario(!menuUsuario)}
+                  >
+                    <FiUser />
+                    <FiChevronDown className="flecha" />
+                  </button>
+
+                  {/* Menú desplegable */}
+                  {menuUsuario && (
+                    <div
+                      className="usuario-desplegable"
+                      onClick={() => setMenuUsuario(false)}
+                    >
+                      <div className="usuario-datos">
+                        <strong>{nombreUsuario}</strong>
+                        <span>{usuario}</span>
+                      </div>
+
+                      <Link to="/perfil">
+                        <FiUser /> Mi perfil
+                      </Link>
+
+                      <Link to="/mis-pedidos">
+                        <FiPackage /> Mis pedidos
+                      </Link>
+
+                      {rol === "admin" && (
+                        <Link to="/admin">
+                          <FiShield /> Panel admin
+                        </Link>
+                      )}
+
+                      <button onClick={cerrarSesion}>
+                        <FiLogOut /> Cerrar sesión
+                      </button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <Link
                   to="/login"
@@ -191,6 +206,14 @@ function Navbar() {
 
         </div>
       </nav>
+
+      {/* Fondo invisible: al tocar fuera se cierra el menú del usuario */}
+      {menuUsuario && (
+        <div
+          className="usuario-fondo"
+          onClick={() => setMenuUsuario(false)}
+        ></div>
+      )}
 
       {/* FONDO OSCURO */}
       {menuAbierto && (
