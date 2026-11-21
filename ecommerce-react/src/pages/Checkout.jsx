@@ -91,7 +91,7 @@ function Checkout() {
 
   // 💰 Total
   const total = carrito.reduce(
-    (acc, item) => acc + Number(item.precio),
+    (acc, item) => acc + Number(item.precio) * (item.cantidad || 1),
     0
   );
 
@@ -149,7 +149,8 @@ function Checkout() {
     // los pone el servidor)
     const pedido = {
       productos: carrito.map((producto) => ({
-        _id: producto._id
+        _id: producto._id,
+        cantidad: producto.cantidad || 1
       })),
 
       metodoPago
@@ -299,7 +300,9 @@ function Checkout() {
 
                 <div className="checkout-producto-info">
 
-                  <h3>{producto.nombre}</h3>
+                  <h3>
+                    {producto.nombre} x{producto.cantidad || 1}
+                  </h3>
 
                   <p>
                     ${Number(producto.precio).toLocaleString()}

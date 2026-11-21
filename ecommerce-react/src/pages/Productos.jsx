@@ -27,7 +27,16 @@ function Productos() {
   // 🔥 Agregar producto al carrito
   const agregarAlCarrito = (producto) => {
     const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    carrito.push(producto);
+
+    // Si el producto ya está en el carrito, se le suma 1 a la cantidad
+    const existente = carrito.find((item) => item._id === producto._id);
+
+    if (existente) {
+      existente.cantidad = (existente.cantidad || 1) + 1;
+    } else {
+      carrito.push({ ...producto, cantidad: 1 });
+    }
+
     localStorage.setItem("carrito", JSON.stringify(carrito));
 
     // 🔥 Actualizar Navbar

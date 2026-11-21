@@ -19,6 +19,23 @@ function Carrito() {
     window.dispatchEvent(new Event("carritoActualizado"));
   };
 
+  // 🔥 Cambiar cantidad (+1 o -1)
+  const cambiarCantidad = (index, cambio) => {
+    const nuevo = [...carrito];
+    const cantidadActual = nuevo[index].cantidad || 1;
+    const nuevaCantidad = cantidadActual + cambio;
+
+    // No bajar de 1 (para quitarlo se usa ❌)
+    if (nuevaCantidad < 1) return;
+
+    nuevo[index] = { ...nuevo[index], cantidad: nuevaCantidad };
+    setCarrito(nuevo);
+    localStorage.setItem("carrito", JSON.stringify(nuevo));
+
+    // 🔥 Actualizar Navbar
+    window.dispatchEvent(new Event("carritoActualizado"));
+  };
+
   // 🔥 Vaciar carrito
   const vaciarCarrito = () => {
     const confirmar = confirm("¿Seguro que quieres vaciar el carrito?");
@@ -31,7 +48,10 @@ function Carrito() {
     window.dispatchEvent(new Event("carritoActualizado"));
   };
 
-  const total = carrito.reduce((acc, item) => acc + item.precio, 0);
+  const total = carrito.reduce(
+    (acc, item) => acc + item.precio * (item.cantidad || 1),
+    0
+  );
 
   return (
     <main style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
@@ -48,6 +68,11 @@ function Carrito() {
                 <div style={{ flex: 1 }}>
                   <h4>{producto.nombre}</h4>
                   <p>${producto.precio.toLocaleString()}</p>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <button onClick={() => cambiarCantidad(index, -1)}>−</button>
+                  <span>{producto.cantidad || 1}</span>
+                  <button onClick={() => cambiarCantidad(index, 1)}>+</button>
                 </div>
                 <button onClick={() => eliminarProducto(index)}>❌</button>
               </div>

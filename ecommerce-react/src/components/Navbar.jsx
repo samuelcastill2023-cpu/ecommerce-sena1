@@ -12,7 +12,13 @@ function Navbar() {
       const carrito =
         JSON.parse(localStorage.getItem("carrito")) || [];
 
-      setCantidad(carrito.length);
+      // Sumar las cantidades de todos los productos
+      const total = carrito.reduce(
+        (acc, item) => acc + (item.cantidad || 1),
+        0
+      );
+
+      setCantidad(total);
     };
 
     actualizarCarrito();
