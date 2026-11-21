@@ -5,7 +5,10 @@ import { API_URL } from "../config";
 function Checkout() {
   const navigate = useNavigate();
 
-  const [carrito, setCarrito] = useState([]);
+  // 🛒 Cargar carrito guardado
+  const [carrito, setCarrito] = useState(
+    JSON.parse(localStorage.getItem("carrito")) || []
+  );
   const [usuario, setUsuario] = useState(null);
   const [metodoPago, setMetodoPago] = useState("");
 
@@ -18,12 +21,6 @@ function Checkout() {
     correoPSE: "",
     telefono: ""
   });
-
-  // 🛒 Cargar carrito
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("carrito")) || [];
-    setCarrito(data);
-  }, []);
 
   // 👤 Cargar usuario
   useEffect(() => {
@@ -141,29 +138,13 @@ function Checkout() {
       }
     }
 
-    // 🔢 Crear número de pedido
-    const numeroPedido = "EC-" + Date.now();
-
     // 📦 Crear pedido
+    // (el número, los precios, el total y los datos del cliente
+    // los pone el servidor)
     const pedido = {
-      numeroPedido,
-
-      usuario: {
-        name: usuario.name,
-        email: usuario.email,
-        phone: usuario.phone,
-        address: usuario.address,
-        city: usuario.city
-      },
-
       productos: carrito.map((producto) => ({
-        _id: producto._id,
-        nombre: producto.nombre,
-        precio: Number(producto.precio),
-        imagen: producto.imagen || ""
+        _id: producto._id
       })),
-
-      total,
 
       metodoPago
     };

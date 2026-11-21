@@ -11,14 +11,12 @@ const esAdmin = require("../middleware/esAdmin");
 router.post("/", verificarToken, async (req, res) => {
   try {
     const {
-      numeroPedido,
       productos,
       metodoPago
     } = req.body;
 
     // Validar datos principales
     if (
-      !numeroPedido ||
       !productos ||
       productos.length === 0 ||
       !metodoPago
@@ -28,16 +26,8 @@ router.post("/", verificarToken, async (req, res) => {
       });
     }
 
-    // Verificar que el número de pedido no exista
-    const pedidoExistente = await Order.findOne({
-      numeroPedido
-    });
-
-    if (pedidoExistente) {
-      return res.status(400).json({
-        message: "El número de pedido ya existe"
-      });
-    }
+    // 🔢 El número de pedido lo crea el servidor
+    const numeroPedido = "EC-" + Date.now();
 
     // 👤 Los datos del cliente salen de la BD (del token), no del navegador
     const user = await User.findById(req.usuario.id);
