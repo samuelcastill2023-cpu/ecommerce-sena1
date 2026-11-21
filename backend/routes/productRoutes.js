@@ -4,6 +4,7 @@ const router = express.Router();
 const Product = require("../models/Product");
 const verificarToken = require("../middleware/verificarToken");
 const esAdmin = require("../middleware/esAdmin");
+const productosIniciales = require("../data/productos.json");
 
 // 🛍️ OBTENER TODOS LOS PRODUCTOS
 router.get("/", async (req, res) => {
@@ -17,6 +18,34 @@ router.get("/", async (req, res) => {
 
     res.status(500).json({
       message: "Error al obtener los productos"
+    });
+  }
+});
+
+// 👑 ADMIN: CARGAR LOS PRODUCTOS INICIALES (data/productos.json)
+router.post("/cargar-iniciales", verificarToken, esAdmin, async (req, res) => {
+  try {
+    // Solo se cargan si la tienda está vacía, para no duplicarlos
+    const cantidad = await Product.countDocuments();
+
+    if (cantidad > 0) {
+      return res.status(400).json({
+        message: "La tienda ya tiene productos"
+      });
+    }
+
+    const productos = await Product.insertMany(productosIniciales);
+
+    res.status(201).json({
+      message: "Productos cargados correctamente",
+      productos
+    });
+
+  } catch (error) {
+    console.error("Error al cargar productos:", error);
+
+    res.status(500).json({
+      message: "Error al cargar los productos"
     });
   }
 });

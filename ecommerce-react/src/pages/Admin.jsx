@@ -196,6 +196,29 @@ function Admin() {
     }
   };
 
+  // 📥 Cargar los productos iniciales cuando la tienda está vacía
+  const cargarIniciales = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/products/cargar-iniciales`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
+      });
+
+      const data = await res.json();
+
+      alert(data.message);
+
+      if (res.ok) {
+        setProductos(data.productos);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor");
+    }
+  };
+
   // ✏️ Pasar un producto al formulario para editarlo
   const editarProducto = (producto) => {
     setFormProducto({
@@ -345,7 +368,18 @@ function Admin() {
           <p>Productos que se muestran en la tienda.</p>
         </div>
 
-        {productos.length === 0 && <p>No hay productos todavía.</p>}
+        {productos.length === 0 && (
+          <>
+            <p>No hay productos todavía.</p>
+
+            <button
+              className="btn-guardar-perfil"
+              onClick={cargarIniciales}
+            >
+              Cargar productos iniciales
+            </button>
+          </>
+        )}
 
         {productos.map((producto) => (
           <div className="admin-fila" key={producto._id}>
