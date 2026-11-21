@@ -54,66 +54,59 @@ function Carrito() {
   );
 
   return (
-    <main style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
-      <div style={{ width: "600px" }}>
-        <h2 style={{ textAlign: "center" }}>Carrito 🛒</h2>
+    <main className="carrito-main">
+      <h2>Carrito 🛒</h2>
 
-        {carrito.length === 0 ? (
-          <p style={{ textAlign: "center" }}>Tu carrito está vacío</p>
-        ) : (
-          <>
-            {carrito.map((producto, index) => (
-              <div key={index} style={{ display: "flex", alignItems: "center", gap: "15px", border: "1px solid #ddd", padding: "10px", marginBottom: "10px", borderRadius: "10px" }}>
-                <img src={producto.imagen} width="80" />
-                <div style={{ flex: 1 }}>
-                  <h4>{producto.nombre}</h4>
-                  <p>${producto.precio.toLocaleString()}</p>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <button onClick={() => cambiarCantidad(index, -1)}>−</button>
-                  <span>{producto.cantidad || 1}</span>
-                  <button onClick={() => cambiarCantidad(index, 1)}>+</button>
-                </div>
-                <button onClick={() => eliminarProducto(index)}>❌</button>
+      {carrito.length === 0 ? (
+        <div className="carrito-vacio">
+          <p>Tu carrito está vacío</p>
+
+          <button
+            className="btn-guardar-perfil"
+            onClick={() => navigate("/productos")}
+          >
+            Ver productos
+          </button>
+        </div>
+      ) : (
+        <>
+          {carrito.map((producto, index) => (
+            <div className="carrito-item" key={index}>
+              <img src={producto.imagen} alt={producto.nombre} />
+
+              <div className="carrito-info">
+                <h4>{producto.nombre}</h4>
+                <p>${producto.precio.toLocaleString()}</p>
               </div>
-            ))}
 
-            <h3 style={{ textAlign: "right" }}>Total: ${total.toLocaleString()}</h3>
-
-            <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-              <button
-  onClick={vaciarCarrito}
-  style={{
-    backgroundColor: "#dc3545",
-    color: "white",
-    border: "none",
-    padding: "10px",
-    borderRadius: "5px",
-    cursor: "pointer",
-    flex: 1
-  }}
->
-  Vaciar carrito 🗑️
-</button>
+              <div className="carrito-cantidad">
+                <button onClick={() => cambiarCantidad(index, -1)}>−</button>
+                <span>{producto.cantidad || 1}</span>
+                <button onClick={() => cambiarCantidad(index, 1)}>+</button>
+              </div>
 
               <button
-  onClick={() => navigate("/checkout")}
-  style={{
-    backgroundColor: "#28a745",
-    color: "white",
-    border: "none",
-    padding: "10px",
-    borderRadius: "5px",
-    cursor: "pointer",
-    flex: 1
-  }}
->
-  Comprar ✅
-</button>
+                className="carrito-quitar"
+                onClick={() => eliminarProducto(index)}
+              >
+                ❌
+              </button>
             </div>
-          </>
-        )}
-      </div>
+          ))}
+
+          <h3 className="carrito-total">Total: ${total.toLocaleString()}</h3>
+
+          <div className="carrito-acciones">
+            <button className="btn-vaciar" onClick={vaciarCarrito}>
+              Vaciar carrito 🗑️
+            </button>
+
+            <button className="btn-comprar" onClick={() => navigate("/checkout")}>
+              Comprar ✅
+            </button>
+          </div>
+        </>
+      )}
     </main>
   );
 }

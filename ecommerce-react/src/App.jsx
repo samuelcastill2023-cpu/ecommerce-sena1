@@ -28,6 +28,11 @@ function App() {
         <Route path="/mis-pedidos" element={<MisPedidos />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
+
+      {/* ===== PIE DE PÁGINA ===== */}
+      <footer>
+        <p>© 2026 Ecommerce · Proyecto SENA ADSO</p>
+      </footer>
     </>
   );
 }

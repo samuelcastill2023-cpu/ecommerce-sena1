@@ -174,7 +174,7 @@ function MisPedidos() {
                           style={{
                             width: "65px",
                             height: "65px",
-                            backgroundColor: "#f1f5ff",
+                            backgroundColor: "#f5f5f5",
                             borderRadius: "8px",
                             display: "flex",
                             alignItems: "center",

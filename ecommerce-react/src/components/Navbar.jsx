@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import logo from "../assets/logo.png";
+import logo from "../assets/eMarketPro-logo-blanco.png";
 
 function Navbar() {
   const [cantidad, setCantidad] = useState(0);
@@ -115,6 +115,43 @@ function Navbar() {
               </Link>
             </li>
 
+            {/* 💻 Solo se ven en pantallas grandes */}
+            {usuario && (
+              <li className="solo-escritorio">
+                <Link to="/mis-pedidos">
+                  Mis pedidos
+                </Link>
+              </li>
+            )}
+
+            {usuario && rol === "admin" && (
+              <li className="solo-escritorio">
+                <Link to="/admin">
+                  Panel admin
+                </Link>
+              </li>
+            )}
+
+            {usuario && (
+              <li className="usuario">
+                <Link to="/perfil">
+                  Hola, {nombreUsuario} 👋
+                </Link>
+              </li>
+            )}
+
+            <li className="solo-escritorio">
+              {usuario ? (
+                <button onClick={cerrarSesion}>
+                  Cerrar sesión
+                </button>
+              ) : (
+                <Link to="/login">
+                  Iniciar sesión
+                </Link>
+              )}
+            </li>
+
             <li>
               <Link
                 to="/carrito"
@@ -126,12 +163,6 @@ function Navbar() {
                 </span>
               </Link>
             </li>
-
-            {usuario && (
-              <li className="usuario">
-                Hola, {nombreUsuario} 👋
-              </li>
-            )}
 
           </ul>
 

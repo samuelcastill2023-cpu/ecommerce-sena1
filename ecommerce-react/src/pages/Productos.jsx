@@ -3,7 +3,6 @@ import { API_URL } from "../config";
 
 function Productos() {
   const [categorias, setCategorias] = useState([]);
-  const [indices, setIndices] = useState({});
   const [productos, setProductos] = useState([]);
 
   // 📡 Cargar productos desde la base de datos
@@ -53,24 +52,11 @@ function Productos() {
     alert(`${producto.nombre} agregado al carrito 🛒`);
   };
 
-  // 🔥 Mover carrusel
-  const mover = (cat, direccion) => {
-    const lista = productos.filter(p => p.categoria === cat);
-    setIndices(prev => {
-      let nuevo = (prev[cat] || 0) + direccion;
-      if (nuevo < 0) nuevo = 0;
-      if (nuevo > lista.length - 3) nuevo = lista.length - 3; // <-- Cambiado a 3
-      return { ...prev, [cat]: nuevo };
-    });
-  };
-
   return (
     <main>
       <h2>Productos</h2>
       {categorias.map(cat => {
         const lista = productos.filter(p => p.categoria === cat);
-        const inicio = indices[cat] || 0;
-
         // No mostrar categorías sin productos
         if (lista.length === 0) return null;
 
@@ -78,21 +64,15 @@ function Productos() {
           <section key={cat} className="categoria">
             <h3>{cat}</h3>
 
-            <div className="carrusel">
-              <button onClick={() => mover(cat, -1)} disabled={inicio === 0}>⬅️</button>
-
-              <div className="grid-productos">
-                {lista.slice(inicio, inicio + 3).map(producto => ( // <-- Cambiado a 3
-                  <div className="producto" key={producto._id}>
-                    <img src={producto.imagen} alt={producto.nombre} />
-                    <h3>{producto.nombre}</h3>
-                    <p>${producto.precio.toLocaleString()}</p>
-                    <button onClick={() => agregarAlCarrito(producto)}>Agregar al carrito</button>
-                  </div>
-                ))}
-              </div>
-
-              <button onClick={() => mover(cat, 1)} disabled={inicio >= lista.length - 3}>➡️</button> {/* <-- Cambiado a 3 */}
+            <div className="grid-productos">
+              {lista.map(producto => (
+                <div className="producto" key={producto._id}>
+                  <img src={producto.imagen} alt={producto.nombre} />
+                  <h3>{producto.nombre}</h3>
+                  <p>${producto.precio.toLocaleString()}</p>
+                  <button onClick={() => agregarAlCarrito(producto)}>Agregar al carrito</button>
+                </div>
+              ))}
             </div>
           </section>
         );
