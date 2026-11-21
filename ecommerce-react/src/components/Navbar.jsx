@@ -107,8 +107,8 @@ function Navbar() {
             </h2>
           </Link>
 
-          {/* OPCIONES SUPERIORES */}
-          <ul className="nav-links">
+          {/* OPCIONES DEL CENTRO */}
+          <ul className="nav-links nav-centro">
 
             <li>
               <Link to="/productos">
@@ -133,6 +133,11 @@ function Navbar() {
               </li>
             )}
 
+          </ul>
+
+          {/* OPCIONES DE LA DERECHA */}
+          <ul className="nav-links nav-derecha">
+
             {usuario && (
               <li className="usuario">
                 <Link to="/perfil">
@@ -147,8 +152,12 @@ function Navbar() {
                   Cerrar sesión
                 </button>
               ) : (
-                <Link to="/login">
-                  Iniciar sesión
+                <Link
+                  to="/login"
+                  className="usuario-icono"
+                  title="Iniciar sesión"
+                >
+                  <FiUser />
                 </Link>
               )}
             </li>

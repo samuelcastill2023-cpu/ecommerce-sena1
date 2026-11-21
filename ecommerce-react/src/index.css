@@ -2120,3 +2120,38 @@ p svg {
     justify-self: end;
   }
 }
+
+
+/* Ícono de usuario para iniciar sesión (computador) */
+.nav-links a.usuario-icono {
+  display: inline-flex;
+  font-size: 22px;
+}
+
+
+/* =========================================
+   NAVBAR EN COMPUTADOR
+   logo a la izquierda · menú al centro · usuario y carrito a la derecha
+   ========================================= */
+
+@media (min-width: 1024px) {
+
+  .nav-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+
+  .logo-container {
+    justify-self: start;
+  }
+
+  .nav-centro {
+    justify-self: center;
+  }
+
+  .nav-derecha {
+    justify-self: end;
+  }
+
+}
