@@ -22,7 +22,6 @@ function Perfil() {
     confirmar: ""
   });
 
-  // 👤 Cargar perfil al abrir la página
   useEffect(() => {
     const cargarPerfil = async () => {
       const correoSesion = localStorage.getItem("sesion");
@@ -42,7 +41,6 @@ function Perfil() {
           }
         );
 
-        // ⏰ Si la sesión venció, ir al login
         if (sesionVencida(res)) {
           return;
         }
@@ -126,7 +124,6 @@ function Perfil() {
         }
       );
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -141,7 +138,6 @@ function Perfil() {
       localStorage.setItem("sesion", data.user.email);
       localStorage.setItem("nombreUsuario", data.user.name);
 
-      // 🔥 Avisar al Navbar que cambió el nombre
       window.dispatchEvent(new Event("sesionActualizada"));
 
       setUsuario(data.user);
@@ -183,7 +179,6 @@ function Perfil() {
         }
       );
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }

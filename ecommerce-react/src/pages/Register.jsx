@@ -23,7 +23,6 @@ function Register() {
   };
 
   const handleRegister = async () => {
-    // 📝 Validar que todos los campos estén llenos
     if (
       !form.nombre ||
       !form.correo ||
@@ -37,7 +36,6 @@ function Register() {
       return;
     }
 
-    // 📧 Validar formato del correo
     const formatoCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formatoCorreo.test(form.correo)) {
@@ -45,7 +43,6 @@ function Register() {
       return;
     }
 
-    // 🔒 Validar largo de la contraseña
     if (form.password.length < 6) {
       alert("La contraseña debe tener al menos 6 caracteres");
       return;

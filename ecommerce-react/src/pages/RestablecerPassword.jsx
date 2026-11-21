@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../config";
 
 function RestablecerPassword() {
-  // 🔑 El token viene en la URL: /restablecer/abc123...
   const { token } = useParams();
   const navigate = useNavigate();
 

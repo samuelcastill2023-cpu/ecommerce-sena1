@@ -36,7 +36,6 @@ function Login() {
   localStorage.setItem("token", data.token);
   localStorage.setItem("rol", data.user.rol);
 
-  // 🔥 Avisar al Navbar que hay sesión
   window.dispatchEvent(new Event("sesionActualizada"));
 
   navigate("/productos");

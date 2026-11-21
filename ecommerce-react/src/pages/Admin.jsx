@@ -9,7 +9,7 @@ function Admin() {
   const [cargando, setCargando] = useState(true);
   const [productos, setProductos] = useState([]);
 
-  // 🛍️ Formulario de producto (sirve para crear y para editar)
+  // 🛍️ Formulario de producto
   const [formProducto, setFormProducto] = useState({
     nombre: "",
     precio: "",
@@ -23,7 +23,7 @@ function Admin() {
   const [nombreCategoria, setNombreCategoria] = useState("");
   const [editandoCategoriaId, setEditandoCategoriaId] = useState(null);
 
-  // 📧 Configuración del correo (Brevo)
+  // 📧 Configuración del correo
   const [formCorreo, setFormCorreo] = useState({
     remitenteNombre: "",
     remitenteEmail: "",
@@ -39,7 +39,7 @@ function Admin() {
     "Cancelado"
   ];
 
-  // 📡 Cargar pedidos y usuarios
+  // 📡 Cargar datos
   useEffect(() => {
     const cargarDatos = async () => {
       if (localStorage.getItem("rol") !== "admin") {
@@ -54,7 +54,6 @@ function Admin() {
 
         const resPedidos = await fetch(`${API_URL}/api/orders`, { headers });
 
-        // ⏰ Si la sesión venció, ir al login
         if (sesionVencida(resPedidos)) {
           return;
         }
@@ -113,7 +112,6 @@ function Admin() {
         body: JSON.stringify({ estado })
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -125,7 +123,6 @@ function Admin() {
         return;
       }
 
-      // Actualizar solo ese pedido en la lista
       setPedidos(
         pedidos.map((pedido) =>
           pedido._id === id ? data.pedido : pedido
@@ -149,7 +146,6 @@ function Admin() {
         body: JSON.stringify({ rol })
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -201,7 +197,6 @@ function Admin() {
       return;
     }
 
-    // Si estamos editando se usa PUT, si no POST
     const url = editandoId
       ? `${API_URL}/api/products/${editandoId}`
       : `${API_URL}/api/products`;
@@ -218,7 +213,6 @@ function Admin() {
         body: JSON.stringify(formProducto)
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -268,7 +262,6 @@ function Admin() {
         body: JSON.stringify(formCorreo)
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -279,7 +272,6 @@ function Admin() {
 
       if (res.ok) {
         setApiKeyConfigurada(data.apiKeyConfigurada);
-        // La clave no se vuelve a mostrar
         setFormCorreo({ ...formCorreo, brevoApiKey: "" });
       }
     } catch (error) {
@@ -288,7 +280,7 @@ function Admin() {
     }
   };
 
-  // 📨 Enviar un correo de prueba al administrador
+  // 📨 Correo de prueba
   const probarCorreo = async () => {
     try {
       const res = await fetch(`${API_URL}/api/config/correo/prueba`, {
@@ -298,7 +290,6 @@ function Admin() {
         }
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -319,7 +310,6 @@ function Admin() {
       return;
     }
 
-    // Si estamos editando se usa PUT, si no POST
     const url = editandoCategoriaId
       ? `${API_URL}/api/categories/${editandoCategoriaId}`
       : `${API_URL}/api/categories`;
@@ -336,7 +326,6 @@ function Admin() {
         body: JSON.stringify({ nombre: nombreCategoria })
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -350,7 +339,6 @@ function Admin() {
       }
 
       if (editandoCategoriaId) {
-        // Los productos de esa categoría también cambian de nombre
         const anterior = categorias.find(
           (categoria) => categoria._id === editandoCategoriaId
         );
@@ -380,13 +368,13 @@ function Admin() {
     }
   };
 
-  // ✏️ Pasar una categoría al formulario para editarla
+  // ✏️ Editar categoría
   const editarCategoria = (categoria) => {
     setNombreCategoria(categoria.nombre);
     setEditandoCategoriaId(categoria._id);
   };
 
-  // 🧹 Cancelar la edición de la categoría
+  // 🧹 Cancelar edición
   const cancelarCategoria = () => {
     setNombreCategoria("");
     setEditandoCategoriaId(null);
@@ -406,7 +394,6 @@ function Admin() {
         }
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -424,7 +411,7 @@ function Admin() {
     }
   };
 
-  // 📥 Cargar las categorías iniciales cuando no hay ninguna
+  // 📥 Cargar categorías iniciales
   const cargarCategoriasIniciales = async () => {
     try {
       const res = await fetch(`${API_URL}/api/categories/cargar-iniciales`, {
@@ -434,7 +421,6 @@ function Admin() {
         }
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -452,7 +438,7 @@ function Admin() {
     }
   };
 
-  // 📥 Cargar los productos iniciales cuando la tienda está vacía
+  // 📥 Cargar productos iniciales
   const cargarIniciales = async () => {
     try {
       const res = await fetch(`${API_URL}/api/products/cargar-iniciales`, {
@@ -462,7 +448,6 @@ function Admin() {
         }
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }
@@ -480,7 +465,7 @@ function Admin() {
     }
   };
 
-  // ✏️ Pasar un producto al formulario para editarlo
+  // ✏️ Editar producto
   const editarProducto = (producto) => {
     setFormProducto({
       nombre: producto.nombre,
@@ -505,7 +490,6 @@ function Admin() {
         }
       });
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }

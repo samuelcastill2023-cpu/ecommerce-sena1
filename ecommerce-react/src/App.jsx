@@ -33,7 +33,6 @@ function App() {
         <Route path="/restablecer/:token" element={<RestablecerPassword />} />
       </Routes>
 
-      {/* ===== PIE DE PÁGINA ===== */}
       <footer>
         <p>© 2026 Ecommerce · Proyecto SENA ADSO</p>
       </footer>

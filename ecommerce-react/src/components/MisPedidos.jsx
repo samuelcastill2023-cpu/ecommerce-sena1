@@ -27,7 +27,6 @@ function MisPedidos() {
           }
         );
 
-        // ⏰ Si la sesión venció, ir al login
         if (sesionVencida(res)) {
           return;
         }

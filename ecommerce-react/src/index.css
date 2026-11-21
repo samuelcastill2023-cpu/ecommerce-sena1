@@ -142,7 +142,6 @@ main {
 }
 
 /* 🔥 CLAVE: CONTENEDOR DE PRODUCTOS */
-/* Cuadrícula: se acomodan solas según el ancho (4 en PC, 3 en tablet) */
 .grid-productos {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -1864,12 +1863,10 @@ footer p {
   font-weight: bold;
 }
 
-/* Los enlaces quedan alineados en el centro */
 .nav-links {
   align-items: center;
 }
 
-/* Enlaces que solo se ven en computador */
 .solo-escritorio {
   display: none;
 }
@@ -1885,7 +1882,6 @@ footer p {
     display: list-item;
   }
 
-  /* En computador el menú ya está arriba */
   .menu-toggle {
     display: none;
   }
@@ -1916,7 +1912,6 @@ footer p {
     padding: 12px 15px;
   }
 
-  /* Solo el logo, sin texto, para que quepa el menú */
   .logo-text {
     display: none;
   }
@@ -1925,7 +1920,6 @@ footer p {
     padding: 25px 12px;
   }
 
-  /* 2 productos por fila */
   .grid-productos {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
@@ -1947,7 +1941,6 @@ footer p {
     font-size: 13px;
   }
 
-  /* Carrito: la cantidad y la X bajan debajo del nombre */
   .carrito-item {
     flex-wrap: wrap;
   }
@@ -1968,12 +1961,10 @@ footer p {
    LOGO eMarketPro
    ========================================= */
 
-/* El logo ya trae el nombre, así que no hace falta el texto */
 .logo-text {
   display: none;
 }
 
-/* Logo con letras blancas para el navbar negro */
 .logo-img {
   height: 55px;
 }
@@ -1987,7 +1978,6 @@ footer p {
 
 /* =========================================
    NAVBAR EN CELULAR Y TABLET (menos de 1024px)
-   ☰ a la izquierda · logo al centro · carrito a la derecha
    ========================================= */
 
 .carrito-movil {
@@ -2006,7 +1996,6 @@ footer p {
     justify-self: start;
   }
 
-  /* Los enlaces de arriba pasan al menú ☰ */
   .nav-links {
     display: none;
   }
@@ -2029,7 +2018,6 @@ footer p {
 }
 
 
-/* Títulos más pequeños en celular para que no se monten */
 @media (max-width: 700px) {
 
   h1,
@@ -2052,7 +2040,6 @@ footer p {
    ÍCONOS (react-icons)
    ========================================= */
 
-/* Alinear los íconos con el texto */
 h1 svg,
 h2 svg,
 h3 svg,
@@ -2064,7 +2051,6 @@ p svg {
   vertical-align: -0.125em;
 }
 
-/* Carrito con el número en la esquina */
 .carrito-icono {
   position: relative;
   display: inline-flex;
@@ -2097,19 +2083,16 @@ p svg {
   line-height: 1;
 }
 
-/* Botones de cantidad del carrito */
 .carrito-cantidad button {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* El carrito del celular no se ve en computador */
 .carrito-movil.carrito-icono {
   display: none;
 }
 
-/* Tamaño del ícono del carrito en el menú de computador */
 .nav-links a.carrito-icono {
   font-size: 22px;
 }
@@ -2122,7 +2105,6 @@ p svg {
 }
 
 
-/* Ícono de usuario para iniciar sesión (computador) */
 .nav-links a.usuario-icono {
   display: inline-flex;
   font-size: 22px;
@@ -2131,7 +2113,6 @@ p svg {
 
 /* =========================================
    NAVBAR EN COMPUTADOR
-   logo a la izquierda · menú al centro · usuario y carrito a la derecha
    ========================================= */
 
 @media (min-width: 1024px) {
@@ -2244,9 +2225,26 @@ p svg {
   margin-top: 6px;
 }
 
-/* Fondo invisible para cerrar el menú al tocar fuera */
 .usuario-fondo {
   position: fixed;
   inset: 0;
   z-index: 1001;
+}
+
+
+.buscador {
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 15px;
+}
+
+.buscador:focus {
+  outline: none;
+  border-color: #111111;
 }

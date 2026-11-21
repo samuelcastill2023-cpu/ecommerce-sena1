@@ -1,5 +1,4 @@
-// ⏰ Revisar si el servidor dijo que la sesión ya no sirve (error 401)
-// Si es así, se cierra la sesión y se manda al login
+// ⏰ Cerrar sesión si el token venció
 export const sesionVencida = (res) => {
   if (res.status !== 401) {
     return false;

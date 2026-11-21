@@ -4,8 +4,9 @@ import { API_URL } from "../config";
 function Productos() {
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
 
-  // 📡 Cargar productos desde la base de datos
+  // 📡 Cargar productos
   useEffect(() => {
     const cargarProductos = async () => {
       try {
@@ -16,7 +17,6 @@ function Productos() {
           setProductos(data);
         }
 
-        // 🏷️ Cargar categorías (solo se usan los nombres)
         const resCategorias = await fetch(`${API_URL}/api/categories`);
         const dataCategorias = await resCategorias.json();
 
@@ -35,7 +35,6 @@ function Productos() {
   const agregarAlCarrito = (producto) => {
     const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-    // Si el producto ya está en el carrito, se le suma 1 a la cantidad
     const existente = carrito.find((item) => item._id === producto._id);
 
     if (existente) {
@@ -52,12 +51,29 @@ function Productos() {
     alert(`${producto.nombre} agregado al carrito`);
   };
 
+  // 🔍 Buscar productos por nombre
+  const encontrados = productos.filter(p =>
+    p.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
   return (
     <main>
       <h2>Productos</h2>
+
+      <input
+        className="buscador"
+        type="text"
+        placeholder="Buscar productos..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
+
+      {productos.length > 0 && encontrados.length === 0 && (
+        <p>No se encontraron productos.</p>
+      )}
+
       {categorias.map(cat => {
-        const lista = productos.filter(p => p.categoria === cat);
-        // No mostrar categorías sin productos
+        const lista = encontrados.filter(p => p.categoria === cat);
         if (lista.length === 0) return null;
 
         return (

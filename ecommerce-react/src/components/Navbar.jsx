@@ -14,7 +14,6 @@ function Navbar() {
       const carrito =
         JSON.parse(localStorage.getItem("carrito")) || [];
 
-      // Sumar las cantidades de todos los productos
       const total = carrito.reduce(
         (acc, item) => acc + (item.cantidad || 1),
         0
@@ -125,7 +124,6 @@ function Navbar() {
             <li className="solo-escritorio usuario-menu">
               {usuario ? (
                 <>
-                  {/* 👤 Botón que abre el menú del usuario */}
                   <button
                     className="usuario-icono"
                     title="Mi cuenta"
@@ -135,7 +133,6 @@ function Navbar() {
                     <FiChevronDown className="flecha" />
                   </button>
 
-                  {/* Menú desplegable */}
                   {menuUsuario && (
                     <div
                       className="usuario-desplegable"
@@ -192,7 +189,7 @@ function Navbar() {
 
           </ul>
 
-          {/* 📱 Carrito solo con ícono (celular y tablet) */}
+          {/* CARRITO CELULAR */}
           <Link
             to="/carrito"
             className="carrito-movil carrito-icono"
@@ -207,7 +204,6 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* Fondo invisible: al tocar fuera se cierra el menú del usuario */}
       {menuUsuario && (
         <div
           className="usuario-fondo"
@@ -319,7 +315,6 @@ function Navbar() {
                 </span>
               </Link>
 
-              {/* 👑 Solo lo ve el administrador */}
               {rol === "admin" && (
                 <Link
                   to="/admin"

@@ -1,8 +1,6 @@
 const Config = require("../models/Config");
 
-// 📧 Enviar un correo con la API de Brevo
-// Si el correo no está configurado o falla, solo se anota en los logs:
-// el registro o la compra siguen funcionando.
+// 📧 Enviar correo con Brevo
 const enviarCorreo = async (para, asunto, html) => {
   try {
     const config = await Config.findOne();
@@ -39,7 +37,7 @@ const enviarCorreo = async (para, asunto, html) => {
   }
 };
 
-// 🎨 Plantilla sencilla para todos los correos
+// 🎨 Plantilla de los correos
 const plantilla = (titulo, contenido) => {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">

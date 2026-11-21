@@ -27,10 +27,9 @@ router.post("/", verificarToken, async (req, res) => {
       });
     }
 
-    // 🔢 El número de pedido lo crea el servidor
+    // 🔢 Crear número de pedido
     const numeroPedido = "EC-" + Date.now();
 
-    // 👤 Los datos del cliente salen de la BD (del token), no del navegador
     const user = await User.findById(req.usuario.id);
 
     if (!user) {
@@ -47,7 +46,6 @@ router.post("/", verificarToken, async (req, res) => {
       city: user.city
     };
 
-    // 💰 Los precios salen de la BD, no del navegador
     const productosPedido = [];
     let total = 0;
 
@@ -60,7 +58,6 @@ router.post("/", verificarToken, async (req, res) => {
         });
       }
 
-      // 🔢 Cantidad de este producto (si no llega, es 1)
       const cantidad = Number(item.cantidad) || 1;
 
       if (!Number.isInteger(cantidad) || cantidad < 1) {

@@ -45,7 +45,6 @@ function Checkout() {
           }
         );
 
-        // ⏰ Si la sesión venció, ir al login
         if (sesionVencida(res)) {
           return;
         }
@@ -146,8 +145,6 @@ function Checkout() {
     }
 
     // 📦 Crear pedido
-    // (el número, los precios, el total y los datos del cliente
-    // los pone el servidor)
     const pedido = {
       productos: carrito.map((producto) => ({
         _id: producto._id,
@@ -171,7 +168,6 @@ function Checkout() {
         }
       );
 
-      // ⏰ Si la sesión venció, ir al login
       if (sesionVencida(res)) {
         return;
       }

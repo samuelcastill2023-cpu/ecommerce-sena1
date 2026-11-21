@@ -8,7 +8,6 @@ const User = require("../models/User");
 const { enviarCorreo, plantilla } = require("../utils/enviarCorreo");
 
 // 👑 ADMIN: VER LA CONFIGURACIÓN DEL CORREO
-// 🔒 La clave de la API nunca se envía al navegador
 router.get("/correo", verificarToken, esAdmin, async (req, res) => {
   try {
     const config = await Config.findOne();
@@ -41,7 +40,6 @@ router.put("/correo", verificarToken, esAdmin, async (req, res) => {
 
     let config = await Config.findOne();
 
-    // Si todavía no existe, se crea
     if (!config) {
       config = new Config();
     }
@@ -49,7 +47,6 @@ router.put("/correo", verificarToken, esAdmin, async (req, res) => {
     config.remitenteEmail = remitenteEmail;
     config.remitenteNombre = remitenteNombre;
 
-    // La clave solo se cambia si escriben una nueva
     if (brevoApiKey) {
       config.brevoApiKey = brevoApiKey;
     }

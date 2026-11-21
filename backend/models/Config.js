@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-// ⚙️ Configuración de la tienda (por ahora, solo la del correo)
-// Se guarda un único documento en la colección "configs"
 const ConfigSchema = new mongoose.Schema(
   {
     brevoApiKey: {

@@ -1,5 +1,4 @@
-// 👑 Revisar que el usuario sea administrador
-// (se usa después de verificarToken)
+// 👑 Verificar que sea administrador
 const esAdmin = (req, res, next) => {
   if (req.usuario.rol !== "admin") {
     return res.status(403).json({

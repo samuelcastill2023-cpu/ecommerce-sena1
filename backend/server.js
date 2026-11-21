@@ -16,7 +16,7 @@ const configRoutes = require("./routes/configRoutes");
 const app = express();
 
 // Middlewares
-// 🌐 Solo estas páginas pueden usar la API
+// 🌐 CORS
 app.use(
   cors({
     origin: [

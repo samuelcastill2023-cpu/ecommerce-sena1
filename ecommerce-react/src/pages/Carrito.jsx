@@ -20,13 +20,12 @@ function Carrito() {
     window.dispatchEvent(new Event("carritoActualizado"));
   };
 
-  // 🔥 Cambiar cantidad (+1 o -1)
+  // 🔥 Cambiar cantidad
   const cambiarCantidad = (index, cambio) => {
     const nuevo = [...carrito];
     const cantidadActual = nuevo[index].cantidad || 1;
     const nuevaCantidad = cantidadActual + cambio;
 
-    // No bajar de 1 (para quitarlo se usa ❌)
     if (nuevaCantidad < 1) return;
 
     nuevo[index] = { ...nuevo[index], cantidad: nuevaCantidad };

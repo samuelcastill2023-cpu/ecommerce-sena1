@@ -8,7 +8,6 @@ const esAdmin = require("../middleware/esAdmin");
 const crypto = require("crypto");
 const { enviarCorreo, plantilla } = require("../utils/enviarCorreo");
 
-// 🌐 Dirección de la tienda (para los enlaces de los correos)
 const FRONTEND_URL =
   process.env.FRONTEND_URL || "https://visionary-starship-b15a52.netlify.app";
 
@@ -40,7 +39,7 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // 📧 Validar formato del correo (texto@texto.texto)
+    // 📧 Validar formato del correo
     const formatoCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formatoCorreo.test(email)) {
@@ -109,7 +108,6 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Pedir también la contraseña (está oculta en el modelo)
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
@@ -127,7 +125,6 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // 🔒 Quitar la contraseña antes de responder
     user.password = undefined;
 
     // 🎫 Crear el token con el id y el rol del usuario
@@ -219,7 +216,6 @@ router.put("/profile/:email", verificarToken, async (req, res) => {
     // 📧 Comprobar si el nuevo correo ya pertenece a OTRO usuario
     if (newEmail && newEmail !== email) {
 
-      // Validar formato del nuevo correo
       const formatoCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!formatoCorreo.test(newEmail)) {
@@ -275,7 +271,6 @@ router.put("/change-password/:email", verificarToken, async (req, res) => {
       confirmPassword
     } = req.body;
 
-    // Pedir también la contraseña (está oculta en el modelo)
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
@@ -371,7 +366,6 @@ router.put("/:id/rol", verificarToken, esAdmin, async (req, res) => {
       });
     }
 
-    // 🚫 Un admin no puede quitarse el rol a sí mismo
     if (req.params.id === req.usuario.id) {
       return res.status(400).json({
         message: "No puedes cambiar tu propio rol"
@@ -405,10 +399,8 @@ router.put("/:id/rol", verificarToken, esAdmin, async (req, res) => {
 });
 
 
-// 🔑 OLVIDÉ MI CONTRASEÑA: enviar el enlace por correo
+// 🔑 OLVIDÉ MI CONTRASEÑA
 router.post("/forgot-password", async (req, res) => {
-  // Siempre se responde lo mismo, exista o no el correo,
-  // para que nadie pueda averiguar qué correos están registrados
   const respuesta = {
     message: "Si el correo está registrado, te enviamos un enlace para cambiar la contraseña"
   };
@@ -428,7 +420,6 @@ router.post("/forgot-password", async (req, res) => {
       return res.json(respuesta);
     }
 
-    // Token aleatorio: el original va en el enlace y en la BD se guarda cifrado
     const token = crypto.randomBytes(32).toString("hex");
 
     user.resetToken = crypto.createHash("sha256").update(token).digest("hex");
@@ -461,7 +452,7 @@ router.post("/forgot-password", async (req, res) => {
 });
 
 
-// 🔑 RESTABLECER CONTRASEÑA con el token del correo
+// 🔑 RESTABLECER CONTRASEÑA
 router.post("/reset-password/:token", async (req, res) => {
   try {
     const { password, confirmPassword } = req.body;
@@ -484,7 +475,6 @@ router.post("/reset-password/:token", async (req, res) => {
       });
     }
 
-    // Se cifra el token del enlace para compararlo con el guardado
     const tokenCifrado = crypto
       .createHash("sha256")
       .update(req.params.token)
@@ -503,7 +493,6 @@ router.post("/reset-password/:token", async (req, res) => {
 
     user.password = await bcrypt.hash(password, 10);
 
-    // El enlace solo sirve una vez
     user.resetToken = undefined;
     user.resetExpira = undefined;
 

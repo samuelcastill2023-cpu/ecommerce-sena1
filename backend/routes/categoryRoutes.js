@@ -23,10 +23,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 👑 ADMIN: CARGAR LAS CATEGORÍAS INICIALES (data/categorias.json)
+// 👑 ADMIN: CARGAR CATEGORÍAS INICIALES
 router.post("/cargar-iniciales", verificarToken, esAdmin, async (req, res) => {
   try {
-    // Solo se cargan si no hay categorías, para no duplicarlas
     const cantidad = await Category.countDocuments();
 
     if (cantidad > 0) {
@@ -88,7 +87,7 @@ router.post("/", verificarToken, esAdmin, async (req, res) => {
   }
 });
 
-// 👑 ADMIN: EDITAR CATEGORÍA (y sus productos)
+// 👑 ADMIN: EDITAR CATEGORÍA
 router.put("/:id", verificarToken, esAdmin, async (req, res) => {
   try {
     const nombre = (req.body.nombre || "").trim();
@@ -121,7 +120,6 @@ router.put("/:id", verificarToken, esAdmin, async (req, res) => {
 
     await categoria.save();
 
-    // 🔄 Los productos de la categoría pasan al nombre nuevo
     await Product.updateMany(
       { categoria: nombreAnterior },
       { categoria: nombre }

@@ -23,10 +23,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 👑 ADMIN: CARGAR LOS PRODUCTOS INICIALES (data/productos.json)
+// 👑 ADMIN: CARGAR PRODUCTOS INICIALES
 router.post("/cargar-iniciales", verificarToken, esAdmin, async (req, res) => {
   try {
-    // Solo se cargan si la tienda está vacía, para no duplicarlos
     const cantidad = await Product.countDocuments();
 
     if (cantidad > 0) {
@@ -68,7 +67,6 @@ router.post("/", verificarToken, esAdmin, async (req, res) => {
       });
     }
 
-    // 🏷️ La categoría debe existir
     const categoriaExiste = await Category.findOne({ nombre: categoria });
 
     if (!categoriaExiste) {
@@ -117,7 +115,6 @@ router.put("/:id", verificarToken, esAdmin, async (req, res) => {
       });
     }
 
-    // 🏷️ La categoría debe existir
     const categoriaExiste = await Category.findOne({ nombre: categoria });
 
     if (!categoriaExiste) {
