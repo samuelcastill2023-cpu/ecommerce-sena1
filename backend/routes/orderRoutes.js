@@ -59,13 +59,23 @@ router.post("/", verificarToken, async (req, res) => {
         });
       }
 
+      // 🔢 Cantidad de este producto (si no llega, es 1)
+      const cantidad = Number(item.cantidad) || 1;
+
+      if (!Number.isInteger(cantidad) || cantidad < 1) {
+        return res.status(400).json({
+          message: "La cantidad no es válida"
+        });
+      }
+
       productosPedido.push({
         nombre: producto.nombre,
         precio: producto.precio,
-        imagen: producto.imagen || ""
+        imagen: producto.imagen || "",
+        cantidad
       });
 
-      total = total + producto.precio;
+      total = total + producto.precio * cantidad;
     }
 
     // Crear pedido
