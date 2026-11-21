@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiShoppingCart, FiMinus, FiPlus, FiX, FiTrash2, FiCheck } from "react-icons/fi";
 
 function Carrito() {
   // 🔥 Cargar carrito guardado
@@ -55,7 +56,7 @@ function Carrito() {
 
   return (
     <main className="carrito-main">
-      <h2>Carrito 🛒</h2>
+      <h2>Carrito <FiShoppingCart /></h2>
 
       {carrito.length === 0 ? (
         <div className="carrito-vacio">
@@ -80,16 +81,16 @@ function Carrito() {
               </div>
 
               <div className="carrito-cantidad">
-                <button onClick={() => cambiarCantidad(index, -1)}>−</button>
+                <button onClick={() => cambiarCantidad(index, -1)}><FiMinus /></button>
                 <span>{producto.cantidad || 1}</span>
-                <button onClick={() => cambiarCantidad(index, 1)}>+</button>
+                <button onClick={() => cambiarCantidad(index, 1)}><FiPlus /></button>
               </div>
 
               <button
                 className="carrito-quitar"
                 onClick={() => eliminarProducto(index)}
               >
-                ❌
+                <FiX />
               </button>
             </div>
           ))}
@@ -98,11 +99,11 @@ function Carrito() {
 
           <div className="carrito-acciones">
             <button className="btn-vaciar" onClick={vaciarCarrito}>
-              Vaciar carrito 🗑️
+              <FiTrash2 /> Vaciar carrito
             </button>
 
             <button className="btn-comprar" onClick={() => navigate("/checkout")}>
-              Comprar ✅
+              <FiCheck /> Comprar
             </button>
           </div>
         </>

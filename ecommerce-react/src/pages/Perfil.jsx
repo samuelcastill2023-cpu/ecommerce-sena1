@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../config";
 import { sesionVencida } from "../sesion";
+import { FiUser, FiLock } from "react-icons/fi";
 
 function Perfil() {
   const [usuario, setUsuario] = useState(null);
@@ -236,7 +237,7 @@ function Perfil() {
       <section className="perfil-card">
 
         <div className="perfil-card-header">
-          <h2>👤 Información personal</h2>
+          <h2><FiUser /> Información personal</h2>
           <p>Actualiza los datos de tu cuenta.</p>
         </div>
 
@@ -297,7 +298,7 @@ function Perfil() {
           </div>
 
           <div className="campo-perfil">
-            <label>Fecha de nacimiento 🔒</label>
+            <label>Fecha de nacimiento <FiLock /></label>
             <input
               type="date"
               value={form.fecha}
@@ -323,7 +324,7 @@ function Perfil() {
       <section className="perfil-card seguridad-card">
 
         <div className="perfil-card-header">
-          <h2>🔐 Seguridad</h2>
+          <h2><FiLock /> Seguridad</h2>
           <p>Cambia la contraseña de tu cuenta.</p>
         </div>
 

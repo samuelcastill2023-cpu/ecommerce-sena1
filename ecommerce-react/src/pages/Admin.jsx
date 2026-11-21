@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../config";
 import { sesionVencida } from "../sesion";
+import { FiTag, FiEdit2, FiShoppingBag, FiList, FiPackage, FiUsers } from "react-icons/fi";
 
 function Admin() {
   const [pedidos, setPedidos] = useState([]);
@@ -467,7 +468,7 @@ function Admin() {
       <section className="perfil-card">
 
         <div className="perfil-card-header">
-          <h2>🏷️ Categorías ({categorias.length})</h2>
+          <h2><FiTag /> Categorías ({categorias.length})</h2>
           <p>Categorías en las que se organizan los productos.</p>
         </div>
 
@@ -525,7 +526,7 @@ function Admin() {
                     (producto) => producto.categoria === categoria.nombre
                   ).length
                 }{" "}
-                productos
+                producto(s)
               </p>
             </div>
 
@@ -552,7 +553,10 @@ function Admin() {
       <section className="perfil-card">
 
         <div className="perfil-card-header">
-          <h2>{editandoId ? "✏️ Editar producto" : "🛍️ Nuevo producto"}</h2>
+          <h2>
+            {editandoId ? <FiEdit2 /> : <FiShoppingBag />}{" "}
+            {editandoId ? "Editar producto" : "Nuevo producto"}
+          </h2>
           <p>Completa los datos del producto.</p>
         </div>
 
@@ -632,7 +636,7 @@ function Admin() {
       <section className="perfil-card">
 
         <div className="perfil-card-header">
-          <h2>📋 Productos ({productos.length})</h2>
+          <h2><FiList /> Productos ({productos.length})</h2>
           <p>Productos que se muestran en la tienda.</p>
         </div>
 
@@ -681,7 +685,7 @@ function Admin() {
       <section className="perfil-card">
 
         <div className="perfil-card-header">
-          <h2>📦 Pedidos ({pedidos.length})</h2>
+          <h2><FiPackage /> Pedidos ({pedidos.length})</h2>
           <p>Cambia el estado de cada pedido.</p>
         </div>
 
@@ -718,7 +722,7 @@ function Admin() {
       <section className="perfil-card">
 
         <div className="perfil-card-header">
-          <h2>👤 Usuarios ({usuarios.length})</h2>
+          <h2><FiUsers /> Usuarios ({usuarios.length})</h2>
           <p>Da o quita permisos de administrador.</p>
         </div>
 

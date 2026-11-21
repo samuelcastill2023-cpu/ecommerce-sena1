@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config";
 import { sesionVencida } from "../sesion";
+import { FiShoppingCart, FiSmartphone, FiGlobe, FiCreditCard, FiArrowLeft } from "react-icons/fi";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -223,7 +224,7 @@ function Checkout() {
 
       {/* ===== ENCABEZADO ===== */}
       <div className="checkout-header">
-        <h1>Finalizar compra 🛒</h1>
+        <h1>Finalizar compra <FiShoppingCart /></h1>
         <p>Revisa tu pedido y completa el proceso de pago.</p>
       </div>
 
@@ -346,7 +347,7 @@ function Checkout() {
               checked={metodoPago === "Nequi"}
               onChange={cambiarMetodoPago}
             />
-            <span>📱 Nequi</span>
+            <span><FiSmartphone /> Nequi</span>
           </label>
 
           <label className="metodo-pago">
@@ -357,7 +358,7 @@ function Checkout() {
               checked={metodoPago === "Daviplata"}
               onChange={cambiarMetodoPago}
             />
-            <span>📱 Daviplata</span>
+            <span><FiSmartphone /> Daviplata</span>
           </label>
 
           <label className="metodo-pago">
@@ -368,7 +369,7 @@ function Checkout() {
               checked={metodoPago === "PSE"}
               onChange={cambiarMetodoPago}
             />
-            <span>🏦 PSE</span>
+            <span><FiGlobe /> PSE</span>
           </label>
 
           <label className="metodo-pago">
@@ -381,7 +382,7 @@ function Checkout() {
               }
               onChange={cambiarMetodoPago}
             />
-            <span>💳 Tarjeta débito/crédito</span>
+            <span><FiCreditCard /> Tarjeta débito/crédito</span>
           </label>
 
         </div>
@@ -500,7 +501,7 @@ function Checkout() {
           className="btn-volver-carrito"
           onClick={() => navigate("/carrito")}
         >
-          ← Volver al carrito
+          <FiArrowLeft /> Volver al carrito
         </button>
 
         <button

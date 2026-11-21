@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logo from "../assets/eMarketPro-logo-blanco.png";
+import { FiMenu, FiX, FiShoppingCart, FiShoppingBag, FiUser, FiPackage, FiShield, FiLogOut, FiLogIn, FiUserPlus } from "react-icons/fi";
 
 function Navbar() {
   const [cantidad, setCantidad] = useState(0);
@@ -87,7 +88,7 @@ function Navbar() {
             className="menu-toggle"
             onClick={() => setMenuAbierto(true)}
           >
-            ☰
+            <FiMenu />
           </button>
 
           {/* LOGO */}
@@ -135,7 +136,7 @@ function Navbar() {
             {usuario && (
               <li className="usuario">
                 <Link to="/perfil">
-                  Hola, {nombreUsuario} 👋
+                  Hola, {nombreUsuario}
                 </Link>
               </li>
             )}
@@ -155,9 +156,10 @@ function Navbar() {
             <li>
               <Link
                 to="/carrito"
-                className="carrito-link"
+                className="carrito-icono"
+                title="Carrito"
               >
-                Carrito 🛒{" "}
+                <FiShoppingCart />
                 <span className="contador">
                   {cantidad}
                 </span>
@@ -165,6 +167,18 @@ function Navbar() {
             </li>
 
           </ul>
+
+          {/* 📱 Carrito solo con ícono (celular y tablet) */}
+          <Link
+            to="/carrito"
+            className="carrito-movil carrito-icono"
+            title="Carrito"
+          >
+            <FiShoppingCart />
+            <span className="contador">
+              {cantidad}
+            </span>
+          </Link>
 
         </div>
       </nav>
@@ -190,12 +204,16 @@ function Navbar() {
         <div className="menu-lateral-header">
 
           <div>
-            <h2>Mi cuenta</h2>
-
-            {usuario && (
-              <p>
-                {nombreUsuario || "Usuario"}
-              </p>
+            {usuario ? (
+              <>
+                <h2>Hola, {nombreUsuario || "Usuario"}</h2>
+                <p>{usuario}</p>
+              </>
+            ) : (
+              <>
+                <h2>Bienvenido</h2>
+                <p>Inicia sesión para comprar</p>
+              </>
             )}
           </div>
 
@@ -203,13 +221,41 @@ function Navbar() {
             className="menu-cerrar"
             onClick={() => setMenuAbierto(false)}
           >
-            ×
+            <FiX />
           </button>
 
         </div>
 
         {/* OPCIONES */}
         <div className="menu-opciones">
+
+          <Link
+            to="/productos"
+            className="menu-opcion"
+            onClick={() => setMenuAbierto(false)}
+          >
+            <span className="menu-icono">
+              <FiShoppingBag />
+            </span>
+
+            <span>
+              Productos
+            </span>
+          </Link>
+
+          <Link
+            to="/carrito"
+            className="menu-opcion"
+            onClick={() => setMenuAbierto(false)}
+          >
+            <span className="menu-icono">
+              <FiShoppingCart />
+            </span>
+
+            <span>
+              Carrito ({cantidad})
+            </span>
+          </Link>
 
           {usuario ? (
             <>
@@ -219,7 +265,7 @@ function Navbar() {
                 onClick={() => setMenuAbierto(false)}
               >
                 <span className="menu-icono">
-                  👤
+                  <FiUser />
                 </span>
 
                 <span>
@@ -233,7 +279,7 @@ function Navbar() {
                 onClick={() => setMenuAbierto(false)}
               >
                 <span className="menu-icono">
-                  📦
+                  <FiPackage />
                 </span>
 
                 <span>
@@ -249,7 +295,7 @@ function Navbar() {
                   onClick={() => setMenuAbierto(false)}
                 >
                   <span className="menu-icono">
-                    👑
+                    <FiShield />
                   </span>
 
                   <span>
@@ -263,7 +309,7 @@ function Navbar() {
                 onClick={cerrarSesion}
               >
                 <span className="menu-icono">
-                  🚪
+                  <FiLogOut />
                 </span>
 
                 <span>
@@ -272,19 +318,35 @@ function Navbar() {
               </button>
             </>
           ) : (
-            <Link
-              to="/login"
-              className="menu-opcion"
-              onClick={() => setMenuAbierto(false)}
-            >
-              <span className="menu-icono">
-                🔐
-              </span>
+            <>
+              <Link
+                to="/login"
+                className="menu-opcion"
+                onClick={() => setMenuAbierto(false)}
+              >
+                <span className="menu-icono">
+                  <FiLogIn />
+                </span>
 
-              <span>
-                Iniciar sesión
-              </span>
-            </Link>
+                <span>
+                  Iniciar sesión
+                </span>
+              </Link>
+
+              <Link
+                to="/register"
+                className="menu-opcion"
+                onClick={() => setMenuAbierto(false)}
+              >
+                <span className="menu-icono">
+                  <FiUserPlus />
+                </span>
+
+                <span>
+                  Registrarse
+                </span>
+              </Link>
+            </>
           )}
 
         </div>

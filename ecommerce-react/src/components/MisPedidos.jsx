@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from "../config";
 import { sesionVencida } from "../sesion";
+import { FiPackage, FiCalendar, FiCreditCard, FiShoppingBag } from "react-icons/fi";
 
 function MisPedidos() {
   const [pedidos, setPedidos] = useState([]);
@@ -54,7 +55,7 @@ function MisPedidos() {
       <main className="mis-pedidos-main">
         <div className="pedidos-cargando">
           <h1>Mis pedidos</h1>
-          <p>📦 Cargando pedidos...</p>
+          <p>Cargando pedidos...</p>
         </div>
       </main>
     );
@@ -79,7 +80,7 @@ function MisPedidos() {
           /* SIN PEDIDOS */
           <div className="pedidos-vacios">
             <div className="pedidos-vacios-icono">
-              📦
+              <FiPackage />
             </div>
 
             <h2>Aún no tienes pedidos</h2>
@@ -115,7 +116,7 @@ function MisPedidos() {
                   </h2>
 
                   <p className="pedido-fecha">
-                    📅{" "}
+                    <FiCalendar />{" "}
                     {new Date(
                       pedido.createdAt
                     ).toLocaleDateString("es-CO")}
@@ -132,7 +133,7 @@ function MisPedidos() {
               <div className="pedido-info">
 
                 <div className="pedido-dato">
-                  <strong>💳 Método de pago</strong>
+                  <strong><FiCreditCard /> Método de pago</strong>
 
                   <span>
                     {pedido.metodoPago}
@@ -140,7 +141,7 @@ function MisPedidos() {
                 </div>
 
                 <div className="pedido-dato">
-                  <strong>📦 Estado</strong>
+                  <strong><FiPackage /> Estado</strong>
 
                   <span>
                     {pedido.estado}
@@ -153,7 +154,7 @@ function MisPedidos() {
               <div className="pedido-productos">
 
                 <h3>
-                  🛍️ Productos del pedido
+                  <FiShoppingBag /> Productos del pedido
                 </h3>
 
                 {pedido.productos.map(
@@ -182,7 +183,7 @@ function MisPedidos() {
                             fontSize: "28px"
                           }}
                         >
-                          🛍️
+                          <FiShoppingBag />
                         </div>
                       )}
 

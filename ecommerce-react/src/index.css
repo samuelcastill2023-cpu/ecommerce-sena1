@@ -1983,3 +1983,140 @@ footer p {
     height: 42px;
   }
 }
+
+
+/* =========================================
+   NAVBAR EN CELULAR Y TABLET (menos de 1024px)
+   ☰ a la izquierda · logo al centro · carrito a la derecha
+   ========================================= */
+
+.carrito-movil {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+
+  .nav-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+
+  .menu-toggle {
+    justify-self: start;
+  }
+
+  /* Los enlaces de arriba pasan al menú ☰ */
+  .nav-links {
+    display: none;
+  }
+
+  .carrito-movil {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-self: end;
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+  }
+
+  .carrito-movil .contador {
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+}
+
+
+/* Títulos más pequeños en celular para que no se monten */
+@media (max-width: 700px) {
+
+  h1,
+  .perfil-header h1,
+  .checkout-header h1,
+  .mis-pedidos-header h1 {
+    font-size: 26px;
+    line-height: 1.25;
+  }
+
+  .perfil-card-header h2,
+  .checkout-card-header h2 {
+    font-size: 20px;
+  }
+
+}
+
+
+/* =========================================
+   ÍCONOS (react-icons)
+   ========================================= */
+
+/* Alinear los íconos con el texto */
+h1 svg,
+h2 svg,
+h3 svg,
+label svg,
+strong svg,
+button svg,
+span svg,
+p svg {
+  vertical-align: -0.125em;
+}
+
+/* Carrito con el número en la esquina */
+.carrito-icono {
+  position: relative;
+  display: inline-flex;
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.carrito-icono .contador {
+  position: absolute;
+  top: -6px;
+  right: -9px;
+
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #e53935;
+  color: white;
+  border: 2px solid #111111;
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* Botones de cantidad del carrito */
+.carrito-cantidad button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* El carrito del celular no se ve en computador */
+.carrito-movil.carrito-icono {
+  display: none;
+}
+
+/* Tamaño del ícono del carrito en el menú de computador */
+.nav-links a.carrito-icono {
+  font-size: 22px;
+}
+
+@media (max-width: 1023px) {
+  .carrito-movil.carrito-icono {
+    display: inline-flex;
+    justify-self: end;
+  }
+}

@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { FiCheck, FiPackage, FiShoppingBag } from "react-icons/fi";
 
 function Confirmacion() {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ function Confirmacion() {
       <div className="confirmacion-card">
 
         <div className="confirmacion-icono">
-          ✓
+          <FiCheck />
         </div>
 
         <h1>¡Compra confirmada!</h1>
@@ -68,7 +69,7 @@ function Confirmacion() {
         <div className="estado-pedido">
 
           <div className="estado-icono">
-            📦
+            <FiPackage />
           </div>
 
           <div>
@@ -87,7 +88,7 @@ function Confirmacion() {
           className="btn-confirmacion"
           onClick={() => navigate("/productos")}
         >
-          Seguir comprando 🛍️
+          <FiShoppingBag /> Seguir comprando
         </button>
 
       </div>

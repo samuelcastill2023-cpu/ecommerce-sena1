@@ -49,7 +49,7 @@ function Productos() {
     // 🔥 Actualizar Navbar
     window.dispatchEvent(new Event("carritoActualizado"));
 
-    alert(`${producto.nombre} agregado al carrito 🛒`);
+    alert(`${producto.nombre} agregado al carrito`);
   };
 
   return (
