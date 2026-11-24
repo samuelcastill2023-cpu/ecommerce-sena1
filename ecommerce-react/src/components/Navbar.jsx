@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logo from "../assets/eMarketPro-logo-blanco.png";
-import { FiMenu, FiX, FiShoppingCart, FiShoppingBag, FiUser, FiPackage, FiShield, FiLogOut, FiLogIn, FiUserPlus, FiChevronDown } from "react-icons/fi";
+import { FiMenu, FiX, FiShoppingCart, FiShoppingBag, FiUser, FiPackage, FiShield, FiUsers, FiLogOut, FiLogIn, FiUserPlus, FiChevronDown } from "react-icons/fi";
 
 function Navbar() {
   const [cantidad, setCantidad] = useState(0);
@@ -151,9 +151,15 @@ function Navbar() {
                         <FiPackage /> Mis pedidos
                       </Link>
 
-                      {rol === "admin" && (
-                        <Link to="/admin">
+                      {(rol === "admin" || rol === "gestor") && (
+                        <Link className="menu-admin" to="/admin">
                           <FiShield /> Panel admin
+                        </Link>
+                      )}
+
+                      {rol === "admin" && (
+                        <Link className="menu-admin" to="/usuarios">
+                          <FiUsers /> Usuarios
                         </Link>
                       )}
 
@@ -315,10 +321,10 @@ function Navbar() {
                 </span>
               </Link>
 
-              {rol === "admin" && (
+              {(rol === "admin" || rol === "gestor") && (
                 <Link
                   to="/admin"
-                  className="menu-opcion"
+                  className="menu-opcion menu-admin"
                   onClick={() => setMenuAbierto(false)}
                 >
                   <span className="menu-icono">
@@ -327,6 +333,22 @@ function Navbar() {
 
                   <span>
                     Panel admin
+                  </span>
+                </Link>
+              )}
+
+              {rol === "admin" && (
+                <Link
+                  to="/usuarios"
+                  className="menu-opcion menu-admin"
+                  onClick={() => setMenuAbierto(false)}
+                >
+                  <span className="menu-icono">
+                    <FiUsers />
+                  </span>
+
+                  <span>
+                    Usuarios
                   </span>
                 </Link>
               )}

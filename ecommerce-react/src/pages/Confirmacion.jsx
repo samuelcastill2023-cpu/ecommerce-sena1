@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { FiCheck, FiPackage, FiShoppingBag } from "react-icons/fi";
+import { formatoPrecio } from "../formato";
 
 function Confirmacion() {
   const navigate = useNavigate();
@@ -53,13 +54,20 @@ function Confirmacion() {
 
           <div>
             <span>Método de pago</span>
-            <strong>{pedido.metodoPago}</strong>
+            <strong>{pedido.referenciaPago || pedido.metodoPago}</strong>
           </div>
 
           <div>
-            <span>Total pagado</span>
+            <span>Envío</span>
             <strong>
-              ${pedido.total.toLocaleString()}
+              {pedido.envio === 0 ? "Gratis" : formatoPrecio(pedido.envio)}
+            </strong>
+          </div>
+
+          <div>
+            <span>{pedido.metodoPago === "Contra entrega" ? "Total a pagar" : "Total pagado"}</span>
+            <strong>
+              {formatoPrecio(pedido.total)}
             </strong>
           </div>
 

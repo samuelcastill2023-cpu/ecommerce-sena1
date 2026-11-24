@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config";
+import { aviso } from "../avisos";
 
 function Register() {
   const navigate = useNavigate();
@@ -22,7 +23,9 @@ function Register() {
     });
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
     if (
       !form.nombre ||
       !form.correo ||
@@ -32,19 +35,19 @@ function Register() {
       !form.ciudad ||
       !form.fecha
     ) {
-      alert("Completa todos los campos");
+      aviso("Completa todos los campos", "warning");
       return;
     }
 
     const formatoCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formatoCorreo.test(form.correo)) {
-      alert("El correo no es válido");
+      aviso("El correo no es válido", "warning");
       return;
     }
 
     if (form.password.length < 6) {
-      alert("La contraseña debe tener al menos 6 caracteres");
+      aviso("La contraseña debe tener al menos 6 caracteres", "warning");
       return;
     }
 
@@ -67,7 +70,7 @@ function Register() {
 
       const data = await res.json();
 
-      alert(data.message);
+      aviso(data.message, res.ok ? "success" : "error");
 
       if (res.ok) {
         navigate("/login");
@@ -75,12 +78,12 @@ function Register() {
 
     } catch (error) {
       console.error(error);
-      alert("Error al conectar con el servidor");
+      aviso("Error al conectar con el servidor", "error");
     }
   };
 
   return (
-    <div className="login-container">
+    <form className="login-container" onSubmit={handleRegister} noValidate>
       <h2>Registro</h2>
 
       <label>Nombre completo</label>
@@ -104,8 +107,8 @@ function Register() {
       <label>Fecha de nacimiento</label>
       <input type="date" name="fecha" onChange={handleChange} />
 
-      <button onClick={handleRegister}>Registrarse</button>
-    </div>
+      <button type="submit">Registrarse</button>
+    </form>
   );
 }
 

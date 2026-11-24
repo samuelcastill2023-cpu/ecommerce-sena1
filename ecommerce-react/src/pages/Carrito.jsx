@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiShoppingCart, FiMinus, FiPlus, FiX, FiTrash2, FiCheck } from "react-icons/fi";
+import { confirmar } from "../avisos";
+import { formatoPrecio } from "../formato";
 
 function Carrito() {
   // 🔥 Cargar carrito guardado
@@ -37,9 +39,9 @@ function Carrito() {
   };
 
   // 🔥 Vaciar carrito
-  const vaciarCarrito = () => {
-    const confirmar = confirm("¿Seguro que quieres vaciar el carrito?");
-    if (!confirmar) return;
+  const vaciarCarrito = async () => {
+    const seguro = await confirmar("¿Seguro que quieres vaciar el carrito?");
+    if (!seguro) return;
 
     localStorage.removeItem("carrito");
     setCarrito([]);
@@ -76,7 +78,7 @@ function Carrito() {
 
               <div className="carrito-info">
                 <h4>{producto.nombre}</h4>
-                <p>${producto.precio.toLocaleString()}</p>
+                <p>{formatoPrecio(producto.precio)}</p>
               </div>
 
               <div className="carrito-cantidad">
@@ -94,7 +96,7 @@ function Carrito() {
             </div>
           ))}
 
-          <h3 className="carrito-total">Total: ${total.toLocaleString()}</h3>
+          <h3 className="carrito-total">Total: {formatoPrecio(total)}</h3>
 
           <div className="carrito-acciones">
             <button className="btn-vaciar" onClick={vaciarCarrito}>

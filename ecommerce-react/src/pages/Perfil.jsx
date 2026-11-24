@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../config";
 import { sesionVencida } from "../sesion";
 import { FiUser, FiLock } from "react-icons/fi";
+import { aviso } from "../avisos";
 
 function Perfil() {
   const [usuario, setUsuario] = useState(null);
@@ -48,7 +49,7 @@ function Perfil() {
         const data = await res.json();
 
         if (!res.ok) {
-          alert(data.message || "No se pudo cargar el perfil");
+          aviso(data.message || "No se pudo cargar el perfil", "error");
           setCargando(false);
           return;
         }
@@ -68,7 +69,7 @@ function Perfil() {
 
       } catch (error) {
         console.error(error);
-        alert("Error al conectar con el servidor");
+        aviso("Error al conectar con el servidor", "error");
       }
 
       setCargando(false);
@@ -91,7 +92,9 @@ function Perfil() {
     });
   };
 
-  const guardarCambios = async () => {
+  const guardarCambios = async (e) => {
+    e.preventDefault();
+
     if (
       !form.nombre ||
       !form.correo ||
@@ -99,7 +102,7 @@ function Perfil() {
       !form.direccion ||
       !form.ciudad
     ) {
-      alert("Completa todos los campos");
+      aviso("Completa todos los campos", "warning");
       return;
     }
 
@@ -131,7 +134,7 @@ function Perfil() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "No se pudieron guardar los cambios");
+        aviso(data.message || "No se pudieron guardar los cambios", "error");
         return;
       }
 
@@ -142,21 +145,23 @@ function Perfil() {
 
       setUsuario(data.user);
 
-      alert("Perfil actualizado correctamente");
+      aviso("Perfil actualizado correctamente", "success");
 
     } catch (error) {
       console.error(error);
-      alert("Error al conectar con el servidor");
+      aviso("Error al conectar con el servidor", "error");
     }
   };
 
-  const cambiarPassword = async () => {
+  const cambiarPassword = async (e) => {
+    e.preventDefault();
+
     if (
       !passwordForm.actual ||
       !passwordForm.nueva ||
       !passwordForm.confirmar
     ) {
-      alert("Completa todos los campos de contraseña");
+      aviso("Completa todos los campos de contraseña", "warning");
       return;
     }
 
@@ -186,11 +191,11 @@ function Perfil() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "No se pudo cambiar la contraseña");
+        aviso(data.message || "No se pudo cambiar la contraseña", "error");
         return;
       }
 
-      alert("Contraseña actualizada correctamente");
+      aviso("Contraseña actualizada correctamente", "success");
 
       setPasswordForm({
         actual: "",
@@ -200,7 +205,7 @@ function Perfil() {
 
     } catch (error) {
       console.error(error);
-      alert("Error al conectar con el servidor");
+      aviso("Error al conectar con el servidor", "error");
     }
   };
 
@@ -236,7 +241,7 @@ function Perfil() {
           <p>Actualiza los datos de tu cuenta.</p>
         </div>
 
-        <div className="perfil-form">
+        <form className="perfil-form" onSubmit={guardarCambios} noValidate>
 
           <div className="campo-perfil">
             <label>Nombre completo</label>
@@ -306,12 +311,12 @@ function Perfil() {
 
           <button
             className="btn-guardar-perfil"
-            onClick={guardarCambios}
+            type="submit"
           >
             Guardar cambios
           </button>
 
-        </div>
+        </form>
 
       </section>
 
@@ -323,7 +328,7 @@ function Perfil() {
           <p>Cambia la contraseña de tu cuenta.</p>
         </div>
 
-        <div className="perfil-form">
+        <form className="perfil-form" onSubmit={cambiarPassword} noValidate>
 
           <div className="campo-perfil">
             <label>Contraseña actual</label>
@@ -360,12 +365,12 @@ function Perfil() {
 
           <button
             className="btn-guardar-perfil"
-            onClick={cambiarPassword}
+            type="submit"
           >
             Cambiar contraseña
           </button>
 
-        </div>
+        </form>
 
       </section>
 

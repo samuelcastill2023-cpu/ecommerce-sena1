@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { API_URL } from "../config";
 import { sesionVencida } from "../sesion";
 import { FiPackage, FiCalendar, FiCreditCard, FiShoppingBag } from "react-icons/fi";
+import { formatoPrecio } from "../formato";
 
 function MisPedidos() {
   const [pedidos, setPedidos] = useState([]);
@@ -200,10 +201,7 @@ function MisPedidos() {
                       </div>
 
                       <div className="pedido-producto-precio">
-                        $
-                        {Number(
-                          producto.precio
-                        ).toLocaleString("es-CO")}
+                        {formatoPrecio(producto.precio)}
                       </div>
 
                     </div>
@@ -221,10 +219,7 @@ function MisPedidos() {
                 </span>
 
                 <strong>
-                  $
-                  {Number(
-                    pedido.total
-                  ).toLocaleString("es-CO")}
+                  {formatoPrecio(pedido.total)}
                 </strong>
 
               </div>

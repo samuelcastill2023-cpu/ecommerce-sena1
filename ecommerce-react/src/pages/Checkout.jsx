@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config";
 import { sesionVencida } from "../sesion";
-import { FiShoppingCart, FiSmartphone, FiGlobe, FiCreditCard, FiArrowLeft } from "react-icons/fi";
+import { FiShoppingCart, FiSmartphone, FiGlobe, FiCreditCard, FiArrowLeft, FiTruck, FiEdit2 } from "react-icons/fi";
+import { aviso } from "../avisos";
+import { formatoPrecio } from "../formato";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ function Checkout() {
   );
   const [usuario, setUsuario] = useState(null);
   const [metodoPago, setMetodoPago] = useState("");
+  const [procesando, setProcesando] = useState(false);
 
   const [datosPago, setDatosPago] = useState({
     numeroTarjeta: "",
@@ -29,7 +32,7 @@ function Checkout() {
     const correo = localStorage.getItem("sesion");
 
     if (!correo) {
-      alert("Debes iniciar sesión para continuar");
+      aviso("Debes iniciar sesión para continuar", "warning");
       navigate("/login");
       return;
     }
@@ -52,14 +55,14 @@ function Checkout() {
         const data = await res.json();
 
         if (!res.ok) {
-          alert(data.message || "No se pudo cargar el perfil");
+          aviso(data.message || "No se pudo cargar el perfil", "error");
           return;
         }
 
         setUsuario(data.user);
       } catch (error) {
         console.error(error);
-        alert("Error al conectar con el servidor");
+        aviso("Error al conectar con el servidor", "error");
       }
     };
 
@@ -89,26 +92,29 @@ function Checkout() {
     });
   };
 
-  // 💰 Total
-  const total = carrito.reduce(
+  // 💰 Subtotal, envío y total
+  const subtotal = carrito.reduce(
     (acc, item) => acc + Number(item.precio) * (item.cantidad || 1),
     0
   );
 
+  const envio = subtotal >= 150000 ? 0 : 10000;
+  const total = subtotal + envio;
+
   // 🛒 CONFIRMAR COMPRA
   const continuarCompra = async () => {
     if (!usuario) {
-      alert("No se pudo cargar la información del usuario");
+      aviso("No se pudo cargar la información del usuario", "warning");
       return;
     }
 
     if (carrito.length === 0) {
-      alert("Tu carrito está vacío");
+      aviso("Tu carrito está vacío", "warning");
       return;
     }
 
     if (!metodoPago) {
-      alert("Selecciona un método de pago");
+      aviso("Selecciona un método de pago", "warning");
       return;
     }
 
@@ -120,7 +126,31 @@ function Checkout() {
         !datosPago.vencimiento ||
         !datosPago.cvv
       ) {
-        alert("Completa todos los datos de la tarjeta");
+        aviso("Completa todos los datos de la tarjeta", "warning");
+        return;
+      }
+
+      if (!/^\d{16}$/.test(datosPago.numeroTarjeta)) {
+        aviso("El número de tarjeta debe tener 16 dígitos", "warning");
+        return;
+      }
+
+      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(datosPago.vencimiento)) {
+        aviso("El vencimiento debe tener el formato MM/AA", "warning");
+        return;
+      }
+
+      const mes = Number(datosPago.vencimiento.slice(0, 2));
+      const anio = 2000 + Number(datosPago.vencimiento.slice(3));
+      const hoy = new Date();
+
+      if (anio < hoy.getFullYear() || (anio === hoy.getFullYear() && mes < hoy.getMonth() + 1)) {
+        aviso("La tarjeta está vencida", "warning");
+        return;
+      }
+
+      if (!/^\d{3}$/.test(datosPago.cvv)) {
+        aviso("El CVV debe tener 3 dígitos", "warning");
         return;
       }
     }
@@ -128,7 +158,12 @@ function Checkout() {
     // 🏦 Validar PSE
     if (metodoPago === "PSE") {
       if (!datosPago.banco || !datosPago.correoPSE) {
-        alert("Completa los datos de PSE");
+        aviso("Completa los datos de PSE", "warning");
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datosPago.correoPSE)) {
+        aviso("El correo de PSE no es válido", "warning");
         return;
       }
     }
@@ -139,9 +174,29 @@ function Checkout() {
       metodoPago === "Daviplata"
     ) {
       if (!datosPago.telefono) {
-        alert("Ingresa el número de celular");
+        aviso("Ingresa el número de celular", "warning");
         return;
       }
+
+      if (!/^3\d{9}$/.test(datosPago.telefono)) {
+        aviso("El celular debe tener 10 dígitos y empezar por 3", "warning");
+        return;
+      }
+    }
+
+    // 🔒 Solo se envían los últimos 4 dígitos o el banco
+    let detallePago = "";
+
+    if (metodoPago === "Tarjeta débito/crédito") {
+      detallePago = datosPago.numeroTarjeta.slice(-4);
+    }
+
+    if (metodoPago === "Nequi" || metodoPago === "Daviplata") {
+      detallePago = datosPago.telefono.slice(-4);
+    }
+
+    if (metodoPago === "PSE") {
+      detallePago = datosPago.banco;
     }
 
     // 📦 Crear pedido
@@ -151,10 +206,16 @@ function Checkout() {
         cantidad: producto.cantidad || 1
       })),
 
-      metodoPago
+      metodoPago,
+      detallePago
     };
 
+    setProcesando(true);
+
     try {
+      // ⏳ Simular la respuesta de la pasarela de pago
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // 📡 Guardar pedido en MongoDB
       const res = await fetch(
         `${API_URL}/api/orders`,
@@ -175,9 +236,11 @@ function Checkout() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(
-          data.message || "No se pudo registrar el pedido"
+        aviso(
+          data.message || "No se pudo registrar el pedido",
+          "error"
         );
+        setProcesando(false);
         return;
       }
 
@@ -197,7 +260,8 @@ function Checkout() {
 
     } catch (error) {
       console.error("Error al registrar pedido:", error);
-      alert("No se pudo conectar con el servidor");
+      aviso("No se pudo conectar con el servidor", "error");
+      setProcesando(false);
     }
   };
 
@@ -261,6 +325,13 @@ function Checkout() {
 
         </div>
 
+        <button
+          className="btn-editar-datos"
+          onClick={() => navigate("/perfil")}
+        >
+          <FiEdit2 /> Cambiar datos de entrega
+        </button>
+
       </section>
 
       {/* ===== RESUMEN DEL PEDIDO ===== */}
@@ -302,7 +373,7 @@ function Checkout() {
                   </h3>
 
                   <p>
-                    ${Number(producto.precio).toLocaleString()}
+                    {formatoPrecio(producto.precio)}
                   </p>
 
                 </div>
@@ -310,12 +381,28 @@ function Checkout() {
               </div>
             ))}
 
+            <div className="checkout-linea">
+              <span>Subtotal</span>
+              <span>{formatoPrecio(subtotal)}</span>
+            </div>
+
+            <div className="checkout-linea">
+              <span><FiTruck /> Envío</span>
+              <span>{envio === 0 ? "Gratis" : formatoPrecio(envio)}</span>
+            </div>
+
+            {envio > 0 && (
+              <p className="info-pago">
+                Envío gratis en compras desde $150.000.
+              </p>
+            )}
+
             <div className="checkout-total">
 
               <span>Total de la compra</span>
 
               <strong>
-                ${total.toLocaleString()}
+                {formatoPrecio(total)}
               </strong>
 
             </div>
@@ -381,6 +468,18 @@ function Checkout() {
             <span><FiCreditCard /> Tarjeta débito/crédito</span>
           </label>
 
+          <label className="metodo-pago">
+            <input
+              type="radio"
+              name="metodoPago"
+              value="Contra entrega"
+              checked={metodoPago === "Contra entrega"}
+              onChange={cambiarMetodoPago}
+            />
+
+            <span><FiTruck /> Contra entrega</span>
+          </label>
+
         </div>
 
         {/* ===== TARJETA ===== */}
@@ -391,6 +490,8 @@ function Checkout() {
 
             <input
               name="numeroTarjeta"
+              inputMode="numeric"
+              maxLength={16}
               placeholder="Número de tarjeta"
               value={datosPago.numeroTarjeta}
               onChange={handlePagoChange}
@@ -407,6 +508,7 @@ function Checkout() {
 
               <input
                 name="vencimiento"
+                maxLength={5}
                 placeholder="MM/AA"
                 value={datosPago.vencimiento}
                 onChange={handlePagoChange}
@@ -414,6 +516,8 @@ function Checkout() {
 
               <input
                 name="cvv"
+                inputMode="numeric"
+                maxLength={3}
                 placeholder="CVV"
                 value={datosPago.cvv}
                 onChange={handlePagoChange}
@@ -476,6 +580,8 @@ function Checkout() {
 
             <input
               name="telefono"
+              inputMode="numeric"
+              maxLength={10}
               placeholder="Número de celular"
               value={datosPago.telefono}
               onChange={handlePagoChange}
@@ -485,6 +591,17 @@ function Checkout() {
               Ingresa el número de celular asociado a tu cuenta.
             </p>
 
+          </div>
+        )}
+
+        {/* ===== CONTRA ENTREGA ===== */}
+        {metodoPago === "Contra entrega" && (
+          <div className="datos-pago">
+            <h3>Pago contra entrega</h3>
+
+            <p className="info-pago">
+              Pagas en efectivo cuando recibas el pedido en tu dirección.
+            </p>
           </div>
         )}
 
@@ -503,8 +620,9 @@ function Checkout() {
         <button
           className="btn-continuar-compra"
           onClick={continuarCompra}
+          disabled={procesando}
         >
-          Confirmar compra
+          {procesando ? "Procesando pago..." : "Confirmar compra"}
         </button>
 
       </div>

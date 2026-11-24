@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from "../config";
+import { aviso } from "../avisos";
 
 function OlvidePassword() {
   const [correo, setCorreo] = useState("");
   const [enviado, setEnviado] = useState(false);
 
   // 📧 Pedir el enlace para cambiar la contraseña
-  const enviarEnlace = async () => {
+  const enviarEnlace = async (e) => {
+    e.preventDefault();
+
     if (!correo) {
-      alert("Escribe tu correo");
+      aviso("Escribe tu correo", "warning");
       return;
     }
 
@@ -25,20 +28,20 @@ function OlvidePassword() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message);
+        aviso(data.message, "error");
         return;
       }
 
       setEnviado(true);
     } catch (error) {
       console.error(error);
-      alert("Error al conectar con el servidor");
+      aviso("Error al conectar con el servidor", "error");
     }
   };
 
   return (
     <main>
-      <div className="login-container">
+      <form className="login-container" onSubmit={enviarEnlace} noValidate>
         <h2>¿Olvidaste tu contraseña?</h2>
 
         {enviado ? (
@@ -58,14 +61,14 @@ function OlvidePassword() {
               onChange={(e) => setCorreo(e.target.value)}
             />
 
-            <button onClick={enviarEnlace}>Enviar enlace</button>
+            <button type="submit">Enviar enlace</button>
           </>
         )}
 
         <p className="registro">
           <Link to="/login">Volver a iniciar sesión</Link>
         </p>
-      </div>
+      </form>
     </main>
   );
 }

@@ -8,6 +8,7 @@ import Checkout from "./pages/Checkout";
 import Confirmacion from "./pages/Confirmacion";
 import MisPedidos from "./components/MisPedidos";
 import Admin from "./pages/Admin";
+import Usuarios from "./pages/Usuarios";
 import OlvidePassword from "./pages/OlvidePassword";
 import RestablecerPassword from "./pages/RestablecerPassword";
 
@@ -29,6 +30,7 @@ function App() {
         <Route path="/confirmacion" element={<Confirmacion />} />
         <Route path="/mis-pedidos" element={<MisPedidos />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/olvide-password" element={<OlvidePassword />} />
         <Route path="/restablecer/:token" element={<RestablecerPassword />} />
       </Routes>

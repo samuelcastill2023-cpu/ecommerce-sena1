@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../config";
+import { aviso } from "../avisos";
 
 function RestablecerPassword() {
   const { token } = useParams();
@@ -9,19 +10,21 @@ function RestablecerPassword() {
   const [password, setPassword] = useState("");
   const [confirmar, setConfirmar] = useState("");
 
-  const cambiarPassword = async () => {
+  const cambiarPassword = async (e) => {
+    e.preventDefault();
+
     if (!password || !confirmar) {
-      alert("Completa los dos campos");
+      aviso("Completa los dos campos", "warning");
       return;
     }
 
     if (password.length < 6) {
-      alert("La contraseña debe tener al menos 6 caracteres");
+      aviso("La contraseña debe tener al menos 6 caracteres", "warning");
       return;
     }
 
     if (password !== confirmar) {
-      alert("Las contraseñas no coinciden");
+      aviso("Las contraseñas no coinciden", "warning");
       return;
     }
 
@@ -39,20 +42,20 @@ function RestablecerPassword() {
 
       const data = await res.json();
 
-      alert(data.message);
+      aviso(data.message, res.ok ? "success" : "error");
 
       if (res.ok) {
         navigate("/login");
       }
     } catch (error) {
       console.error(error);
-      alert("Error al conectar con el servidor");
+      aviso("Error al conectar con el servidor", "error");
     }
   };
 
   return (
     <main>
-      <div className="login-container">
+      <form className="login-container" onSubmit={cambiarPassword} noValidate>
         <h2>Nueva contraseña</h2>
 
         <label>Nueva contraseña</label>
@@ -71,8 +74,8 @@ function RestablecerPassword() {
           onChange={(e) => setConfirmar(e.target.value)}
         />
 
-        <button onClick={cambiarPassword}>Cambiar contraseña</button>
-      </div>
+        <button type="submit">Cambiar contraseña</button>
+      </form>
     </main>
   );
 }

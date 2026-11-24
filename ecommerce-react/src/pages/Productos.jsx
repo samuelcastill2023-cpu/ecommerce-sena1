@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../config";
+import { avisoRapido } from "../avisos";
+import { formatoPrecio } from "../formato";
 
 function Productos() {
   const [categorias, setCategorias] = useState([]);
@@ -48,7 +50,7 @@ function Productos() {
     // 🔥 Actualizar Navbar
     window.dispatchEvent(new Event("carritoActualizado"));
 
-    alert(`${producto.nombre} agregado al carrito`);
+    avisoRapido(`${producto.nombre} agregado al carrito`);
   };
 
   // 🔍 Buscar productos por nombre
@@ -58,6 +60,13 @@ function Productos() {
 
   return (
     <main>
+      {/* 🛍️ Banner de bienvenida */}
+      <div className="banner-tienda">
+        <h1>Bienvenido a eMarketPro</h1>
+        <p>Ropa, calzado y accesorios con envío a todo el país.</p>
+        <span>Envío gratis desde $150.000</span>
+      </div>
+
       <h2>Productos</h2>
 
       <input
@@ -85,7 +94,7 @@ function Productos() {
                 <div className="producto" key={producto._id}>
                   <img src={producto.imagen} alt={producto.nombre} />
                   <h3>{producto.nombre}</h3>
-                  <p>${producto.precio.toLocaleString()}</p>
+                  <p>{formatoPrecio(producto.precio)}</p>
                   <button onClick={() => agregarAlCarrito(producto)}>Agregar al carrito</button>
                 </div>
               ))}
