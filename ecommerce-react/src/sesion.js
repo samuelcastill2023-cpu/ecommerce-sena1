@@ -1,3 +1,5 @@
+import { aviso } from "./avisos";
+
 // ⏰ Cerrar sesión si el token venció
 export const sesionVencida = (res) => {
   if (res.status !== 401) {
@@ -9,8 +11,9 @@ export const sesionVencida = (res) => {
   localStorage.removeItem("token");
   localStorage.removeItem("rol");
 
-  alert("Tu sesión expiró, inicia sesión de nuevo");
-  window.location.href = "/login";
+  aviso("Tu sesión expiró, inicia sesión de nuevo", "warning").then(() => {
+    window.location.href = "/login";
+  });
 
   return true;
 };
