@@ -203,7 +203,9 @@ function Checkout() {
     const pedido = {
       productos: carrito.map((producto) => ({
         _id: producto._id,
-        cantidad: producto.cantidad || 1
+        cantidad: producto.cantidad || 1,
+        talla: producto.talla || "",
+        color: producto.color || ""
       })),
 
       metodoPago,
@@ -369,7 +371,10 @@ function Checkout() {
                 <div className="checkout-producto-info">
 
                   <h3>
-                    {producto.nombre} x{producto.cantidad || 1}
+                    {producto.nombre}
+                    {producto.talla && " - Talla " + producto.talla}
+                    {producto.color && " - " + producto.color}
+                    {" "}x{producto.cantidad || 1}
                   </h3>
 
                   <p>

@@ -61,6 +61,10 @@ function MisPedidos() {
     );
   }
 
+
+  // 🚚 Pasos del seguimiento del pedido
+  const pasos = ["Pedido recibido", "En preparación", "Enviado", "Entregado"];
+
   return (
     <main className="mis-pedidos-main">
 
@@ -136,7 +140,7 @@ function MisPedidos() {
                   <strong><FiCreditCard /> Método de pago</strong>
 
                   <span>
-                    {pedido.metodoPago}
+                    {pedido.referenciaPago || pedido.metodoPago}
                   </span>
                 </div>
 
@@ -149,6 +153,29 @@ function MisPedidos() {
                 </div>
 
               </div>
+
+              {/* SEGUIMIENTO */}
+              {pedido.estado === "Cancelado" ? (
+                <p className="seguimiento-cancelado">
+                  Este pedido fue cancelado.
+                </p>
+              ) : (
+                <div className="seguimiento">
+                  {pasos.map((paso, i) => (
+                    <div
+                      key={paso}
+                      className={
+                        i <= pasos.indexOf(pedido.estado)
+                          ? "paso paso-hecho"
+                          : "paso"
+                      }
+                    >
+                      <span className="paso-circulo">{i + 1}</span>
+                      <span className="paso-texto">{paso}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* PRODUCTOS */}
               <div className="pedido-productos">
@@ -192,6 +219,14 @@ function MisPedidos() {
                         <h4>
                           {producto.nombre}
                         </h4>
+
+                        {(producto.talla || producto.color) && (
+                          <p>
+                            {producto.talla && "Talla " + producto.talla}
+                            {producto.talla && producto.color && " · "}
+                            {producto.color}
+                          </p>
+                        )}
 
                         <p>
                           Cantidad:{" "}

@@ -1,5 +1,7 @@
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Productos from "./pages/Productos";
+import ProductoDetalle from "./pages/ProductoDetalle";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Carrito from "./pages/Carrito";
@@ -22,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/productos" />} />
         <Route path="/productos" element={<Productos />} />
+        <Route path="/producto/:id" element={<ProductoDetalle />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/carrito" element={<Carrito />} />
@@ -35,9 +38,7 @@ function App() {
         <Route path="/restablecer/:token" element={<RestablecerPassword />} />
       </Routes>
 
-      <footer>
-        <p>© 2026 Ecommerce · Proyecto SENA ADSO</p>
-      </footer>
+      <Footer />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiShoppingCart, FiMinus, FiPlus, FiX, FiTrash2, FiCheck } from "react-icons/fi";
-import { confirmar } from "../avisos";
+import { aviso, confirmar } from "../avisos";
 import { formatoPrecio } from "../formato";
 
 function Carrito() {
@@ -29,6 +29,11 @@ function Carrito() {
     const nuevaCantidad = cantidadActual + cambio;
 
     if (nuevaCantidad < 1) return;
+
+    if (nuevo[index].stock !== undefined && nuevaCantidad > nuevo[index].stock) {
+      aviso("Solo hay " + nuevo[index].stock + " unidades disponibles", "warning");
+      return;
+    }
 
     nuevo[index] = { ...nuevo[index], cantidad: nuevaCantidad };
     setCarrito(nuevo);
@@ -78,6 +83,15 @@ function Carrito() {
 
               <div className="carrito-info">
                 <h4>{producto.nombre}</h4>
+
+                {(producto.talla || producto.color) && (
+                  <span className="carrito-variante">
+                    {producto.talla && "Talla " + producto.talla}
+                    {producto.talla && producto.color && " · "}
+                    {producto.color}
+                  </span>
+                )}
+
                 <p>{formatoPrecio(producto.precio)}</p>
               </div>
 

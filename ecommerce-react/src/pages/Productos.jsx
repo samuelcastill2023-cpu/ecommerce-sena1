@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { API_URL } from "../config";
 import { avisoRapido } from "../avisos";
 import { formatoPrecio } from "../formato";
+import { agregarAlCarrito } from "../carrito";
 
 function Productos() {
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
+  const [categoriaElegida, setCategoriaElegida] = useState("Todas");
+  const [orden, setOrden] = useState("");
+
+  const navigate = useNavigate();
+
+  // 👕 Género que viene del menú: /productos?genero=Hombre
+  const [parametros] = useSearchParams();
+  const genero = parametros.get("genero") || "";
 
   // 📡 Cargar productos
   useEffect(() => {
@@ -33,30 +43,47 @@ function Productos() {
     cargarProductos();
   }, []);
 
-  // 🔥 Agregar producto al carrito
-  const agregarAlCarrito = (producto) => {
-    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-
-    const existente = carrito.find((item) => item._id === producto._id);
-
-    if (existente) {
-      existente.cantidad = (existente.cantidad || 1) + 1;
-    } else {
-      carrito.push({ ...producto, cantidad: 1 });
+  // 🔥 Agregar producto al carrito (si tiene talla o color, va al detalle)
+  const agregar = (producto) => {
+    if (tieneVariantes(producto)) {
+      navigate(`/producto/${producto._id}`);
+      return;
     }
 
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-
-    // 🔥 Actualizar Navbar
-    window.dispatchEvent(new Event("carritoActualizado"));
-
+    agregarAlCarrito(producto);
     avisoRapido(`${producto.nombre} agregado al carrito`);
   };
 
-  // 🔍 Buscar productos por nombre
-  const encontrados = productos.filter(p =>
-    p.nombre.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  // 👕 Saber si el producto tiene talla o color
+  const tieneVariantes = (producto) => {
+    return (producto.tallas || []).length > 0 || (producto.colores || []).length > 0;
+  };
+
+  // 🔘 Texto del botón de cada producto
+  const textoBoton = (producto) => {
+    if (producto.stock === 0) return "Agotado";
+    if (tieneVariantes(producto)) return "Ver opciones";
+    return "Agregar al carrito";
+  };
+
+  // 🔍 Buscar por nombre y filtrar por género
+  const encontrados = productos
+    .filter((p) => p.nombre.toLowerCase().includes(busqueda.toLowerCase()))
+    .filter((p) => !genero || p.genero === genero || p.genero === "Unisex");
+
+  // ↕️ Ordenar por precio
+  if (orden === "menor") {
+    encontrados.sort((a, b) => a.precio - b.precio);
+  }
+
+  if (orden === "mayor") {
+    encontrados.sort((a, b) => b.precio - a.precio);
+  }
+
+  // 🏷️ Categorías que se muestran
+  const categoriasVisibles = categoriaElegida === "Todas"
+    ? categorias
+    : [categoriaElegida];
 
   return (
     <main>
@@ -67,21 +94,46 @@ function Productos() {
         <span>Envío gratis desde $150.000</span>
       </div>
 
-      <h2>Productos</h2>
+      <h2>{genero ? "Productos para " + genero : "Productos"}</h2>
 
-      <input
-        className="buscador"
-        type="text"
-        placeholder="Buscar productos..."
-        value={busqueda}
-        onChange={(e) => setBusqueda(e.target.value)}
-      />
+      <div className="filtros-tienda">
+        <input
+          className="buscador"
+          type="text"
+          placeholder="Buscar productos..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+
+        <select
+          className="select-orden"
+          value={orden}
+          onChange={(e) => setOrden(e.target.value)}
+        >
+          <option value="">Ordenar por</option>
+          <option value="menor">Precio: menor a mayor</option>
+          <option value="mayor">Precio: mayor a menor</option>
+        </select>
+      </div>
+
+      {/* 🏷️ Filtro por categoría */}
+      <div className="chips-categorias">
+        {["Todas", ...categorias].map((cat) => (
+          <button
+            key={cat}
+            className={categoriaElegida === cat ? "chip chip-activo" : "chip"}
+            onClick={() => setCategoriaElegida(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
       {productos.length > 0 && encontrados.length === 0 && (
         <p>No se encontraron productos.</p>
       )}
 
-      {categorias.map(cat => {
+      {categoriasVisibles.map(cat => {
         const lista = encontrados.filter(p => p.categoria === cat);
         if (lista.length === 0) return null;
 
@@ -92,10 +144,26 @@ function Productos() {
             <div className="grid-productos">
               {lista.map(producto => (
                 <div className="producto" key={producto._id}>
-                  <img src={producto.imagen} alt={producto.nombre} />
-                  <h3>{producto.nombre}</h3>
+                  <Link to={`/producto/${producto._id}`} className="producto-enlace">
+                    <div className="producto-imagen">
+                      <img src={producto.imagen} alt={producto.nombre} />
+
+                      {producto.stock === 0 && (
+                        <span className="etiqueta-agotado">Agotado</span>
+                      )}
+                    </div>
+
+                    <h3>{producto.nombre}</h3>
+                  </Link>
+
                   <p>{formatoPrecio(producto.precio)}</p>
-                  <button onClick={() => agregarAlCarrito(producto)}>Agregar al carrito</button>
+
+                  <button
+                    onClick={() => agregar(producto)}
+                    disabled={producto.stock === 0}
+                  >
+                    {textoBoton(producto)}
+                  </button>
                 </div>
               ))}
             </div>

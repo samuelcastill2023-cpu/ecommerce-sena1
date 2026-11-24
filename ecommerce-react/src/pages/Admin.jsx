@@ -16,7 +16,12 @@ function Admin() {
     nombre: "",
     precio: "",
     imagen: "",
-    categoria: ""
+    categoria: "",
+    descripcion: "",
+    genero: "Unisex",
+    tallas: "",
+    colores: "",
+    stock: ""
   });
   const [editandoId, setEditandoId] = useState(null);
 
@@ -150,7 +155,12 @@ function Admin() {
       nombre: "",
       precio: "",
       imagen: "",
-      categoria: ""
+      categoria: "",
+      descripcion: "",
+      genero: "Unisex",
+      tallas: "",
+      colores: "",
+      stock: ""
     });
     setEditandoId(null);
   };
@@ -162,9 +172,10 @@ function Admin() {
     if (
       !formProducto.nombre ||
       !formProducto.precio ||
-      !formProducto.categoria
+      !formProducto.categoria ||
+      formProducto.stock === ""
     ) {
-      aviso("Completa nombre, precio y categoría", "warning");
+      aviso("Completa nombre, precio, categoría y stock", "warning");
       return;
     }
 
@@ -446,7 +457,12 @@ function Admin() {
       nombre: producto.nombre,
       precio: producto.precio,
       imagen: producto.imagen || "",
-      categoria: producto.categoria
+      categoria: producto.categoria,
+      descripcion: producto.descripcion || "",
+      genero: producto.genero || "Unisex",
+      tallas: (producto.tallas || []).join(", "),
+      colores: (producto.colores || []).join(", "),
+      stock: producto.stock !== undefined ? producto.stock : ""
     });
     setEditandoId(producto._id);
   };
@@ -733,6 +749,66 @@ function Admin() {
                 />
               </div>
 
+              <div className="campo-perfil">
+                <label>Descripción</label>
+                <textarea
+                  name="descripcion"
+                  rows="3"
+                  value={formProducto.descripcion}
+                  onChange={handleProductoChange}
+                />
+              </div>
+
+              <div className="perfil-fila">
+                <div className="campo-perfil">
+                  <label>Género</label>
+                  <select
+                    name="genero"
+                    value={formProducto.genero}
+                    onChange={handleProductoChange}
+                  >
+                    <option value="Unisex">Unisex</option>
+                    <option value="Hombre">Hombre</option>
+                    <option value="Mujer">Mujer</option>
+                  </select>
+                </div>
+
+                <div className="campo-perfil">
+                  <label>Stock (unidades)</label>
+                  <input
+                    type="number"
+                    name="stock"
+                    min="0"
+                    value={formProducto.stock}
+                    onChange={handleProductoChange}
+                  />
+                </div>
+              </div>
+
+              <div className="perfil-fila">
+                <div className="campo-perfil">
+                  <label>Tallas (separadas por coma)</label>
+                  <input
+                    type="text"
+                    name="tallas"
+                    placeholder="S, M, L, XL"
+                    value={formProducto.tallas}
+                    onChange={handleProductoChange}
+                  />
+                </div>
+
+                <div className="campo-perfil">
+                  <label>Colores (separados por coma)</label>
+                  <input
+                    type="text"
+                    name="colores"
+                    placeholder="Negro, Blanco"
+                    value={formProducto.colores}
+                    onChange={handleProductoChange}
+                  />
+                </div>
+              </div>
+
               <button
                 className="btn-guardar-perfil"
                 type="submit"
@@ -781,7 +857,7 @@ function Admin() {
                 <div className="admin-info">
                   <strong>{producto.nombre}</strong>
                   <p>
-                    {producto.categoria} - {formatoPrecio(producto.precio)}
+                    {producto.categoria} - {formatoPrecio(producto.precio)} - {producto.stock === 0 ? "Agotado" : producto.stock + " en stock"}
                   </p>
                 </div>
 
@@ -826,6 +902,16 @@ function Admin() {
                 </p>
                 <p>
                   {formatoPrecio(pedido.total)} - {pedido.referenciaPago || pedido.metodoPago}
+                </p>
+                <p>
+                  {pedido.productos
+                    .map((item) =>
+                      item.nombre +
+                      (item.talla ? " " + item.talla : "") +
+                      (item.color ? " " + item.color : "") +
+                      " x" + item.cantidad
+                    )
+                    .join(", ")}
                 </p>
               </div>
 

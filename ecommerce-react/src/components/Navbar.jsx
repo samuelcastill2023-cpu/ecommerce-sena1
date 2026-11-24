@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logo from "../assets/eMarketPro-logo-blanco.png";
-import { FiMenu, FiX, FiShoppingCart, FiShoppingBag, FiUser, FiPackage, FiShield, FiUsers, FiLogOut, FiLogIn, FiUserPlus, FiChevronDown } from "react-icons/fi";
+import { FiMenu, FiX, FiShoppingCart, FiShoppingBag, FiTag, FiUser, FiPackage, FiShield, FiUsers, FiLogOut, FiLogIn, FiUserPlus, FiChevronDown } from "react-icons/fi";
 
 function Navbar() {
   const [cantidad, setCantidad] = useState(0);
@@ -113,6 +113,18 @@ function Navbar() {
             <li>
               <Link to="/productos">
                 Productos
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/productos?genero=Hombre">
+                Hombre
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/productos?genero=Mujer">
+                Mujer
               </Link>
             </li>
 
@@ -274,6 +286,34 @@ function Navbar() {
 
             <span>
               Productos
+            </span>
+          </Link>
+
+          <Link
+            to="/productos?genero=Hombre"
+            className="menu-opcion"
+            onClick={() => setMenuAbierto(false)}
+          >
+            <span className="menu-icono">
+              <FiTag />
+            </span>
+
+            <span>
+              Hombre
+            </span>
+          </Link>
+
+          <Link
+            to="/productos?genero=Mujer"
+            className="menu-opcion"
+            onClick={() => setMenuAbierto(false)}
+          >
+            <span className="menu-icono">
+              <FiTag />
+            </span>
+
+            <span>
+              Mujer
             </span>
           </Link>
 
