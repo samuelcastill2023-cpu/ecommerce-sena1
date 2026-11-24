@@ -90,6 +90,7 @@ router.post("/", verificarToken, async (req, res) => {
     };
 
     const productosPedido = [];
+    const cantidadPorProducto = {};
     let subtotal = 0;
 
     for (const item of productos) {
@@ -109,11 +110,39 @@ router.post("/", verificarToken, async (req, res) => {
         });
       }
 
+      // 👕 Validar talla y color
+      const talla = item.talla || "";
+      const color = item.color || "";
+
+      if (producto.tallas.length > 0 && !producto.tallas.includes(talla)) {
+        return res.status(400).json({
+          message: "Selecciona una talla válida para " + producto.nombre
+        });
+      }
+
+      if (producto.colores.length > 0 && !producto.colores.includes(color)) {
+        return res.status(400).json({
+          message: "Selecciona un color válido para " + producto.nombre
+        });
+      }
+
+      // 📦 Validar stock (sumando todas las variantes del mismo producto)
+      const id = producto._id.toString();
+      cantidadPorProducto[id] = (cantidadPorProducto[id] || 0) + cantidad;
+
+      if (cantidadPorProducto[id] > producto.stock) {
+        return res.status(400).json({
+          message: "No hay suficiente stock de " + producto.nombre + ". Quedan " + producto.stock
+        });
+      }
+
       productosPedido.push({
         nombre: producto.nombre,
         precio: producto.precio,
         imagen: producto.imagen || "",
-        cantidad
+        cantidad,
+        talla,
+        color
       });
 
       subtotal = subtotal + producto.precio * cantidad;
@@ -137,13 +166,25 @@ router.post("/", verificarToken, async (req, res) => {
     // Guardar en MongoDB
     await nuevoPedido.save();
 
+    // 📉 Descontar el stock
+    for (const id in cantidadPorProducto) {
+      const producto = await Product.findById(id);
+
+      producto.stock = producto.stock - cantidadPorProducto[id];
+
+      await producto.save();
+    }
+
     // 📧 Correo de confirmación del pedido
     let filas = "";
 
     for (const item of productosPedido) {
       filas +=
         "<tr>" +
-        "<td style='padding:6px 0;'>" + item.nombre + " x" + item.cantidad + "</td>" +
+        "<td style='padding:6px 0;'>" + item.nombre +
+        (item.talla ? " - Talla " + item.talla : "") +
+        (item.color ? " - " + item.color : "") +
+        " x" + item.cantidad + "</td>" +
         "<td style='padding:6px 0; text-align:right;'>$" +
         (item.precio * item.cantidad).toLocaleString("es-CO") +
         "</td>" +

@@ -20,6 +20,33 @@ const ProductSchema = new mongoose.Schema(
     categoria: {
       type: String,
       required: true
+    },
+
+    descripcion: {
+      type: String,
+      default: ""
+    },
+
+    genero: {
+      type: String,
+      enum: ["Hombre", "Mujer", "Unisex"],
+      default: "Unisex"
+    },
+
+    tallas: {
+      type: [String],
+      default: []
+    },
+
+    colores: {
+      type: [String],
+      default: []
+    },
+
+    stock: {
+      type: Number,
+      default: 20,
+      min: 0
     }
   },
 

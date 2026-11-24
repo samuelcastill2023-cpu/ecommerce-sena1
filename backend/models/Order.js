@@ -54,6 +54,16 @@ const OrderSchema = new mongoose.Schema(
         cantidad: {
           type: Number,
           default: 1
+        },
+
+        talla: {
+          type: String,
+          default: ""
+        },
+
+        color: {
+          type: String,
+          default: ""
         }
       }
     ],
