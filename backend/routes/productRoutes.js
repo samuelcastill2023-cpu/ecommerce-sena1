@@ -4,7 +4,7 @@ const router = express.Router();
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 const verificarToken = require("../middleware/verificarToken");
-const esAdmin = require("../middleware/esAdmin");
+const esGestor = require("../middleware/esGestor");
 const productosIniciales = require("../data/productos.json");
 
 // 🛍️ OBTENER TODOS LOS PRODUCTOS
@@ -23,8 +23,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 👑 ADMIN: CARGAR PRODUCTOS INICIALES
-router.post("/cargar-iniciales", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: CARGAR PRODUCTOS INICIALES
+router.post("/cargar-iniciales", verificarToken, esGestor, async (req, res) => {
   try {
     const cantidad = await Product.countDocuments();
 
@@ -50,8 +50,8 @@ router.post("/cargar-iniciales", verificarToken, esAdmin, async (req, res) => {
   }
 });
 
-// 👑 ADMIN: CREAR PRODUCTO
-router.post("/", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: CREAR PRODUCTO
+router.post("/", verificarToken, esGestor, async (req, res) => {
   try {
     const { nombre, precio, imagen, categoria } = req.body;
 
@@ -98,8 +98,8 @@ router.post("/", verificarToken, esAdmin, async (req, res) => {
   }
 });
 
-// 👑 ADMIN: EDITAR PRODUCTO
-router.put("/:id", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: EDITAR PRODUCTO
+router.put("/:id", verificarToken, esGestor, async (req, res) => {
   try {
     const { nombre, precio, imagen, categoria } = req.body;
 
@@ -152,8 +152,8 @@ router.put("/:id", verificarToken, esAdmin, async (req, res) => {
   }
 });
 
-// 👑 ADMIN: ELIMINAR PRODUCTO
-router.delete("/:id", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: ELIMINAR PRODUCTO
+router.delete("/:id", verificarToken, esGestor, async (req, res) => {
   try {
     const producto = await Product.findByIdAndDelete(req.params.id);
 

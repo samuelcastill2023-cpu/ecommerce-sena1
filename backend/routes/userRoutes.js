@@ -360,7 +360,7 @@ router.put("/:id/rol", verificarToken, esAdmin, async (req, res) => {
   try {
     const { rol } = req.body;
 
-    if (rol !== "cliente" && rol !== "admin") {
+    if (rol !== "cliente" && rol !== "gestor" && rol !== "admin") {
       return res.status(400).json({
         message: "Rol no válido"
       });

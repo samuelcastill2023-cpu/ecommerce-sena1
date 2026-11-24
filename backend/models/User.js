@@ -33,7 +33,7 @@ const UserSchema = new mongoose.Schema({
   },
   rol: {
     type: String,
-    enum: ["cliente", "admin"],
+    enum: ["cliente", "gestor", "admin"],
     default: "cliente" // 👤 Todo usuario nuevo es cliente
   },
   resetToken: {

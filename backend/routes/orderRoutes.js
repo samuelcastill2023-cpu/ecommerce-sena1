@@ -6,14 +6,22 @@ const User = require("../models/User");
 const Product = require("../models/Product");
 const { enviarCorreo, plantilla } = require("../utils/enviarCorreo");
 const verificarToken = require("../middleware/verificarToken");
-const esAdmin = require("../middleware/esAdmin");
+const esGestor = require("../middleware/esGestor");
+
+const metodosPago = ["Nequi", "Daviplata", "PSE", "Tarjeta débito/crédito", "Contra entrega"];
+const bancosPSE = ["Bancolombia", "Davivienda", "Banco de Bogotá"];
+
+// 🚚 Envío: $10.000, gratis desde $150.000
+const COSTO_ENVIO = 10000;
+const ENVIO_GRATIS_DESDE = 150000;
 
 // 🛒 CREAR PEDIDO
 router.post("/", verificarToken, async (req, res) => {
   try {
     const {
       productos,
-      metodoPago
+      metodoPago,
+      detallePago
     } = req.body;
 
     // Validar datos principales
@@ -25,6 +33,41 @@ router.post("/", verificarToken, async (req, res) => {
       return res.status(400).json({
         message: "Faltan datos para crear el pedido"
       });
+    }
+
+    if (!metodosPago.includes(metodoPago)) {
+      return res.status(400).json({
+        message: "El método de pago no es válido"
+      });
+    }
+
+    // 💳 Referencia del pago (nunca se guarda la tarjeta completa)
+    let referenciaPago = "";
+
+    if (metodoPago === "Tarjeta débito/crédito" || metodoPago === "Nequi" || metodoPago === "Daviplata") {
+      if (!/^\d{4}$/.test(detallePago)) {
+        return res.status(400).json({
+          message: "Los datos del pago no son válidos"
+        });
+      }
+
+      referenciaPago = metodoPago === "Tarjeta débito/crédito"
+        ? "Tarjeta terminada en " + detallePago
+        : metodoPago + " terminado en " + detallePago;
+    }
+
+    if (metodoPago === "PSE") {
+      if (!bancosPSE.includes(detallePago)) {
+        return res.status(400).json({
+          message: "El banco no es válido"
+        });
+      }
+
+      referenciaPago = "PSE - " + detallePago;
+    }
+
+    if (metodoPago === "Contra entrega") {
+      referenciaPago = "Pago al recibir el pedido";
     }
 
     // 🔢 Crear número de pedido
@@ -47,7 +90,7 @@ router.post("/", verificarToken, async (req, res) => {
     };
 
     const productosPedido = [];
-    let total = 0;
+    let subtotal = 0;
 
     for (const item of productos) {
       const producto = await Product.findById(item._id);
@@ -73,16 +116,22 @@ router.post("/", verificarToken, async (req, res) => {
         cantidad
       });
 
-      total = total + producto.precio * cantidad;
+      subtotal = subtotal + producto.precio * cantidad;
     }
+
+    const envio = subtotal >= ENVIO_GRATIS_DESDE ? 0 : COSTO_ENVIO;
+    const total = subtotal + envio;
 
     // Crear pedido
     const nuevoPedido = new Order({
       numeroPedido,
       usuario,
       productos: productosPedido,
+      subtotal,
+      envio,
       total,
-      metodoPago
+      metodoPago,
+      referenciaPago
     });
 
     // Guardar en MongoDB
@@ -108,8 +157,9 @@ router.post("/", verificarToken, async (req, res) => {
         "¡Gracias por tu compra, " + usuario.name + "!",
         "<p>Recibimos tu pedido <strong>" + numeroPedido + "</strong>.</p>" +
         "<table style='width:100%; border-collapse:collapse;'>" + filas + "</table>" +
+        "<p>Subtotal: $" + subtotal.toLocaleString("es-CO") + "<br>Envío: " + (envio === 0 ? "Gratis" : "$" + envio.toLocaleString("es-CO")) + "</p>" +
         "<p style='font-size:17px;'><strong>Total: $" + total.toLocaleString("es-CO") + "</strong></p>" +
-        "<p>Método de pago: " + metodoPago + "<br>Envío a: " + usuario.address + ", " + usuario.city + "</p>"
+        "<p>Método de pago: " + referenciaPago + "<br>Envío a: " + usuario.address + ", " + usuario.city + "</p>"
       )
     );
 
@@ -156,8 +206,8 @@ router.get("/usuario/:email", verificarToken, async (req, res) => {
   }
 });
 
-// 👑 ADMIN: VER TODOS LOS PEDIDOS
-router.get("/", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: VER TODOS LOS PEDIDOS
+router.get("/", verificarToken, esGestor, async (req, res) => {
   try {
     const pedidos = await Order.find().sort({ createdAt: -1 });
 
@@ -172,8 +222,8 @@ router.get("/", verificarToken, esAdmin, async (req, res) => {
   }
 });
 
-// 👑 ADMIN: CAMBIAR ESTADO DE UN PEDIDO
-router.put("/:id/estado", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: CAMBIAR ESTADO DE UN PEDIDO
+router.put("/:id/estado", verificarToken, esGestor, async (req, res) => {
   try {
     const { estado } = req.body;
 

@@ -58,6 +58,16 @@ const OrderSchema = new mongoose.Schema(
       }
     ],
 
+    subtotal: {
+      type: Number,
+      default: 0
+    },
+
+    envio: {
+      type: Number,
+      default: 0
+    },
+
     total: {
       type: Number,
       required: true
@@ -66,6 +76,11 @@ const OrderSchema = new mongoose.Schema(
     metodoPago: {
       type: String,
       required: true
+    },
+
+    referenciaPago: {
+      type: String,
+      default: ""
     },
 
     estado: {

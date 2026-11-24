@@ -4,7 +4,7 @@ const router = express.Router();
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const verificarToken = require("../middleware/verificarToken");
-const esAdmin = require("../middleware/esAdmin");
+const esGestor = require("../middleware/esGestor");
 const categoriasIniciales = require("../data/categorias.json");
 
 // 🏷️ OBTENER TODAS LAS CATEGORÍAS
@@ -23,8 +23,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 👑 ADMIN: CARGAR CATEGORÍAS INICIALES
-router.post("/cargar-iniciales", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: CARGAR CATEGORÍAS INICIALES
+router.post("/cargar-iniciales", verificarToken, esGestor, async (req, res) => {
   try {
     const cantidad = await Category.countDocuments();
 
@@ -50,8 +50,8 @@ router.post("/cargar-iniciales", verificarToken, esAdmin, async (req, res) => {
   }
 });
 
-// 👑 ADMIN: CREAR CATEGORÍA
-router.post("/", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: CREAR CATEGORÍA
+router.post("/", verificarToken, esGestor, async (req, res) => {
   try {
     const nombre = (req.body.nombre || "").trim();
 
@@ -87,8 +87,8 @@ router.post("/", verificarToken, esAdmin, async (req, res) => {
   }
 });
 
-// 👑 ADMIN: EDITAR CATEGORÍA
-router.put("/:id", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: EDITAR CATEGORÍA
+router.put("/:id", verificarToken, esGestor, async (req, res) => {
   try {
     const nombre = (req.body.nombre || "").trim();
 
@@ -139,8 +139,8 @@ router.put("/:id", verificarToken, esAdmin, async (req, res) => {
   }
 });
 
-// 👑 ADMIN: ELIMINAR CATEGORÍA
-router.delete("/:id", verificarToken, esAdmin, async (req, res) => {
+// 🏪 GESTOR: ELIMINAR CATEGORÍA
+router.delete("/:id", verificarToken, esGestor, async (req, res) => {
   try {
     const categoria = await Category.findById(req.params.id);
 
